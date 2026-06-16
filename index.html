@@ -1,822 +1,952 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="uz">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>24.WØRD'$</title>
-<style>
-  :root {
-    --bg: #0D0D0D;
-    --card: #161616;
-    --card2: #1A1A1A;
-    --border: #2A2A2A;
-    --text: #F0EBE3;
-    --subtext: #6B6560;
-    --accent: #E8621A;
-    --accent2: #FF7A30;
-    --accent-dim: #3D1A08;
-    --input-bg: #161616;
-    --tag-bg: #2A1508;
-    --tag-fg: #E8621A;
-    --sep: #222222;
-    --hint: #3A3530;
-    --delete: #CC3333;
-    --green: #3DB87A;
-    --green-bg: #0A2318;
-    --red: #CC4444;
-    --red-bg: #200A0A;
-    --yellow: #D4A017;
-    --yellow-bg: #1E1600;
-  }
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body {
-    background: var(--bg);
-    color: var(--text);
-    font-family: 'Segoe UI', system-ui, sans-serif;
-    min-height: 100vh;
-  }
-  #app { max-width: 700px; margin: 0 auto; padding: 0 0 40px; }
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>24.WØRD'$</title>
+        <style>
+            /* ===== DARK MODE (default) ===== */
+            :root {
+                --bg: #0d0d0d;
+                --card: #161616;
+                --card2: #1a1a1a;
+                --border: #2a2a2a;
+                --text: #f0ebe3;
+                --subtext: #6b6560;
+                --accent: #e8621a;
+                --accent2: #ff7a30;
+                --accent-dim: #3d1a08;
+                --input-bg: #161616;
+                --tag-bg: #2a1508;
+                --tag-fg: #e8621a;
+                --sep: #222222;
+                --hint: #3a3530;
+                --delete: #cc3333;
+                --green: #3db87a;
+                --green-bg: #0a2318;
+                --red: #cc4444;
+                --red-bg: #200a0a;
+                --yellow: #d4a017;
+                --yellow-bg: #1e1600;
+            }
 
-  /* HEADER */
-  .header {
+            /* ===== LIGHT MODE ===== */
+            body.light {
+                --bg: #ffffff;
+                --card: #f0f4ff;
+                --card2: #e8eeff;
+                --border: #c5d0e8;
+                --text: #0d1a2e;
+                --subtext: #5a6a8a;
+                --accent: #1a4fc8;
+                --accent2: #2860e0;
+                --accent-dim: #dde6ff;
+                --input-bg: #f0f4ff;
+                --tag-bg: #dde6ff;
+                --tag-fg: #1a4fc8;
+                --sep: #d0daf0;
+                --hint: #a0aec0;
+                --delete: #cc3333;
+                --green: #1a8a50;
+                --green-bg: #d6f5e8;
+                --red: #cc2222;
+                --red-bg: #fde8e8;
+                --yellow: #a07000;
+                --yellow-bg: #fff3cc;
+            }
+
+            * {
+                box-sizing: border-box;
+                margin: 0;
+                padding: 0;
+            }
+            body {
+                background: var(--bg);
+                color: var(--text);
+                font-family: "Segoe UI", system-ui, sans-serif;
+                min-height: 100vh;
+                transition: background 0.25s, color 0.25s;
+            }
+            #app {
+                max-width: 700px;
+                margin: 0 auto;
+                padding: 0 0 40px;
+            }
+
+            /* HEADER */
+            .header {
+                display: flex;
+                align-items: center;
+                padding: 14px 24px;
+                gap: 12px;
+                border-bottom: 1px solid var(--sep);
+                position: sticky;
+                top: 0;
+                background: var(--bg);
+                z-index: 100;
+                transition: background 0.25s, border-color 0.25s;
+            }
+            .logo {
+                color: var(--accent);
+                font-size: 22px;
+                font-weight: 700;
+                letter-spacing: -0.5px;
+                cursor: pointer;
+                flex-shrink: 0;
+            }
+            .stats {
+                display: flex;
+                align-items: center;
+                gap: 8px;
+            }
+            .lv-badge {
+                background: var(--accent-dim);
+                color: var(--accent);
+                font-size: 11px;
+                font-weight: 700;
+                padding: 3px 9px;
+                border-radius: 6px;
+                transition: background 0.25s, color 0.25s;
+            }
+            .exp-label {
+                color: var(--subtext);
+                font-size: 11px;
+            }
+            .header-btns {
+                margin-left: auto;
+                display: flex;
+                gap: 8px;
+                align-items: center;
+            }
+
+            /* THEME TOGGLE */
+            .theme-toggle {
+                background: var(--card);
+                border: 1px solid var(--border);
+                border-radius: 20px;
+                padding: 5px 11px;
+                cursor: pointer;
+                font-size: 16px;
+                line-height: 1;
+                transition: background 0.25s, border-color 0.25s;
+                flex-shrink: 0;
+            }
+            .theme-toggle:hover {
+                background: var(--accent-dim);
+                border-color: var(--accent);
+            }
+
+            .btny {
     display: flex;
+    gap: 8px;
     align-items: center;
-    padding: 14px 24px;
-    gap: 12px;
-    border-bottom: 1px solid var(--sep);
-    position: sticky; top: 0;
-    background: var(--bg);
-    z-index: 100;
-  }
-  .logo { color: var(--accent); font-size: 22px; font-weight: 700; letter-spacing: -0.5px; cursor: pointer; flex-shrink: 0; }
-  .stats { display: flex; align-items: center; gap: 8px; }
-  .lv-badge {
-    background: var(--accent-dim); color: var(--accent);
-    font-size: 11px; font-weight: 700;
-    padding: 3px 9px; border-radius: 6px;
-  }
-  .exp-label { color: var(--subtext); font-size: 11px; }
-  .header-btns { margin-left: auto; display: flex; gap: 8px; align-items: center; }
-  .btn {
-    border: none; cursor: pointer;
-    font-family: inherit; font-weight: 600;
-    border-radius: 8px; transition: opacity 0.15s;
+    background: var(--accent);
+    color: #fff;
+    padding: 8px 16px;
+    font-size: 13px;
+    border: none;
+    cursor: pointer;
+    font-family: inherit;
+    font-weight: 600;
+    border-radius: 8px;
+    transition: opacity 0.15s, background 0.25s;
     white-space: nowrap;
-  }
-  .btn:hover { opacity: 0.85; }
-  .btn-accent { background: var(--accent); color: #fff; padding: 8px 16px; font-size: 13px; }
-  .btn-dim { background: var(--accent-dim); color: var(--accent); padding: 8px 14px; font-size: 12px; }
-  .btn-ghost { background: transparent; color: var(--subtext); padding: 8px 12px; font-size: 12px; border: 1px solid var(--border); }
-  .btn-danger { background: var(--red-bg); color: var(--red); padding: 6px 10px; font-size: 12px; }
-  .btn-green { background: var(--green-bg); color: var(--green); padding: 10px 18px; font-size: 13px; }
-  .btn-red { background: var(--red-bg); color: var(--red); padding: 10px 18px; font-size: 13px; }
-
-  /* BREADCRUMB */
-  .bread { padding: 8px 24px 0; }
-  .bread a { color: var(--accent); font-size: 13px; cursor: pointer; text-decoration: none; }
-  .bread a:hover { text-decoration: underline; }
-
-  /* SEARCH */
-  .search-wrap { padding: 10px 24px; }
-  .search-input {
-    width: 100%; background: var(--input-bg); border: none;
-    border-bottom: 1px solid var(--border);
-    color: var(--text); font-family: inherit; font-size: 14px;
-    padding: 10px 4px; outline: none;
-    transition: border-color 0.15s;
-  }
-  .search-input::placeholder { color: var(--hint); }
-  .search-input:focus { border-bottom-color: var(--accent); }
-
-  /* ADD PANEL */
-  .add-panel {
-    background: var(--card); padding: 20px 24px;
-    border-bottom: 1px solid var(--sep);
-    display: none;
-  }
-  .add-panel.open { display: block; }
-  .add-panel label { display: block; color: var(--subtext); font-size: 11px; font-weight: 700; margin-bottom: 10px; letter-spacing: 0.5px; text-transform: uppercase; }
-  .add-input-wrap { margin-bottom: 12px; }
-  .add-input {
-    width: 100%; background: var(--input-bg); border: none;
-    border-bottom: 1px solid var(--border);
-    color: var(--text); font-family: inherit; font-size: 15px;
-    padding: 10px 4px; outline: none; transition: border-color 0.15s;
-  }
-  .add-input::placeholder { color: var(--hint); }
-  .add-input:focus { border-bottom-color: var(--accent); }
-  .add-panel-footer { display: flex; justify-content: flex-end; padding-top: 6px; }
-
-  /* INFO BAR */
-  .info-bar {
-    display: flex; align-items: center; justify-content: space-between;
-    padding: 8px 24px;
-    border-bottom: 1px solid var(--sep);
-  }
-  .count-label { color: var(--subtext); font-size: 12px; }
-
-  /* LIST */
-  .list { padding: 12px 24px 0; display: flex; flex-direction: column; gap: 8px; }
-
-  /* TOPIC CARD */
-  .topic-card {
-    background: var(--card); border-radius: 10px;
-    display: flex; align-items: stretch;
-    cursor: pointer; overflow: hidden;
-    transition: background 0.12s;
-  }
-  .topic-card:hover { background: #1e1e1e; }
-  .topic-bar { width: 3px; background: var(--accent); flex-shrink: 0; }
-  .topic-body { flex: 1; padding: 14px 16px; min-width: 0; }
-  .topic-name { font-size: 15px; font-weight: 700; color: var(--text); }
-  .topic-meta { font-size: 11px; color: var(--subtext); margin-top: 4px; }
-  .topic-del { background: none; border: none; cursor: pointer; color: var(--delete); font-size: 16px; padding: 0 14px; flex-shrink: 0; opacity: 0.7; }
-  .topic-del:hover { opacity: 1; }
-
-  /* WORD CARD */
-  .word-card { background: var(--card); border-radius: 10px; overflow: hidden; }
-  .word-row { display: flex; align-items: stretch; }
-  .word-uz {
-    flex: 1; padding: 12px 14px; font-size: 14px; font-weight: 700;
-    color: var(--text); text-align: right;
-  }
-  .word-divider { width: 2px; background: var(--accent); flex-shrink: 0; }
-  .word-eng {
-    flex: 1; padding: 12px 14px; font-size: 14px; font-weight: 700;
-    color: var(--accent); text-align: left;
-  }
-  .word-del { background: none; border: none; cursor: pointer; color: var(--delete); font-size: 14px; padding: 0 12px; opacity: 0.6; }
-  .word-del:hover { opacity: 1; }
-  .word-date { padding: 4px 14px 8px; }
-  .word-date span { background: var(--tag-bg); color: var(--tag-fg); font-size: 10px; padding: 2px 6px; border-radius: 4px; }
-
-  /* EMPTY STATE */
-  .empty { text-align: center; padding: 60px 24px; color: var(--hint); font-size: 14px; }
-
-  /* ===== PRESET SCREEN ===== */
-  .preset-intro { padding: 12px 24px 4px; }
-  .preset-intro h2 { font-size: 15px; font-weight: 700; color: var(--text); margin-bottom: 4px; }
-  .preset-intro p { font-size: 12px; color: var(--subtext); }
-  .sep-line { height: 1px; background: var(--sep); margin: 8px 24px; }
-
-  /* ===== TEST SCREEN ===== */
-  #test-screen { display: none; }
-  .test-progress-bar { height: 3px; background: var(--sep); margin: 0 24px; border-radius: 2px; overflow: hidden; }
-  .test-progress-fill { height: 100%; background: var(--accent); width: 0%; transition: width 0.3s; }
-  .test-topic-label { padding: 8px 24px; color: var(--subtext); font-size: 12px; }
-  .test-card {
-    background: var(--card); margin: 12px 24px; border-radius: 12px;
-    padding: 28px 24px;
-  }
-  .test-hint { color: var(--subtext); font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 12px; }
-  .test-word { font-size: 32px; font-weight: 700; color: var(--text); margin-bottom: 16px; line-height: 1.2; }
-  .test-timer { text-align: right; color: var(--accent); font-size: 13px; font-weight: 700; }
-  .test-timer.hard { color: var(--red); }
-  .test-answer-reveal { padding: 4px 24px 12px; font-size: 16px; color: var(--text); min-height: 32px; }
-  .test-btns { padding: 0 24px; display: flex; gap: 12px; }
-  .test-btns .btn { flex: 1; }
-  .btn-show { display: block; width: calc(100% - 48px); margin: 0 24px 8px; font-size: 14px; }
-
-  /* ===== RESULTS ===== */
-  #results-screen { display: none; }
-  .results-score-card {
-    background: var(--card); margin: 12px 24px; border-radius: 12px;
-    padding: 20px 24px; display: flex; align-items: center; gap: 20px;
-  }
-  .results-pct { font-size: 52px; font-weight: 700; line-height: 1; }
-  .results-stats { display: flex; flex-direction: column; gap: 4px; }
-  .results-stats span { font-size: 13px; }
-  .results-list { padding: 0 24px; display: flex; flex-direction: column; gap: 0; margin-top: 8px; }
-  .results-section-title { font-size: 12px; font-weight: 700; padding: 10px 0 6px; letter-spacing: 0.4px; }
-  .results-row {
-    display: flex; align-items: center; justify-content: space-between;
-    padding: 10px 14px; border-radius: 8px; margin-bottom: 4px;
-  }
-  .results-row-left { font-size: 13px; font-weight: 700; }
-  .results-row-right { font-size: 11px; opacity: 0.7; }
-
-  /* ===== LEVEL UP ===== */
-  #levelup-screen {
-    display: none; text-align: center; padding: 60px 24px;
-  }
-  .levelup-title { font-size: 56px; font-weight: 700; color: var(--accent); letter-spacing: -2px; }
-  .levelup-icon { font-size: 44px; margin: 8px 0; }
-  .levelup-num { font-size: 30px; font-weight: 700; color: var(--text); margin: 16px 0 8px; }
-  .levelup-badge {
-    display: inline-block;
-    background: var(--accent-dim); color: var(--accent);
-    font-size: 17px; font-weight: 700; padding: 10px 28px; border-radius: 10px;
-    margin-bottom: 32px;
-  }
-
-  /* PROG label */
-  .prog-label { color: var(--subtext); font-size: 12px; margin-left: auto; }
-</style>
-</head>
-<body>
-<div id="app">
-
-  <!-- MAIN SCREEN -->
-  <div id="main-screen">
-    <div class="header">
-      <span class="logo" onclick="goHome()">24.WØRD'$</span>
-      <div class="stats">
-        <span class="lv-badge" id="lv-badge">Lv.1</span>
-        <span class="exp-label" id="exp-label">0 EXP</span>
-      </div>
-      <div class="header-btns">
-        <button class="btn btn-dim" id="presets-btn" onclick="openPresets()">📚 Tayyor mavzular</button>
-        <button class="btn btn-accent" id="action-btn" onclick="actionBtn()">＋ Yangi mavzu</button>
-      </div>
-    </div>
-
-    <div class="bread" id="bread"></div>
-
-    <div class="search-wrap">
-      <input class="search-input" id="search-input" placeholder="🔍  Qidirish..." oninput="refresh()">
-    </div>
-
-    <!-- ADD PANEL -->
-    <div class="add-panel" id="add-panel">
-      <label id="add-label">Yangi mavzu nomi:</label>
-      <div class="add-input-wrap">
-        <input class="add-input" id="add-f1" placeholder="">
-      </div>
-      <div class="add-input-wrap" id="add-f2-wrap" style="display:none">
-        <div style="color:var(--subtext);font-size:11px;margin-bottom:6px">O'zbekcha tarjimasi</div>
-        <input class="add-input" id="add-f2" placeholder="O'zbekcha tarjimasi...">
-      </div>
-      <div class="add-panel-footer">
-        <button class="btn btn-accent" id="add-save-btn" onclick="saveItem()">✓ Saqlash</button>
-      </div>
-    </div>
-
-    <div class="sep-line"></div>
-    <div class="info-bar">
-      <span class="count-label" id="count-label"></span>
-      <button class="btn btn-accent" id="test-btn" style="display:none;font-size:12px;padding:6px 14px" onclick="startTest()">🧪 Test</button>
-    </div>
-    <div class="list" id="list"></div>
-  </div>
-
-  <!-- TEST SCREEN -->
-  <div id="test-screen">
-    <div class="header">
-      <span class="logo">24.WØRD'$</span>
-      <span class="prog-label" id="test-prog"></span>
-    </div>
-    <div class="test-progress-bar"><div class="test-progress-fill" id="test-fill"></div></div>
-    <div class="test-topic-label" id="test-topic-lbl"></div>
-    <div class="test-card">
-      <div class="test-hint">Inglizcha so'zini toping:</div>
-      <div class="test-word" id="test-word"></div>
-      <div class="test-timer" id="test-timer"></div>
-    </div>
-    <div class="test-answer-reveal" id="test-answer-reveal"></div>
-    <button class="btn btn-accent btn-show" id="btn-show" onclick="showAnswer()">👁 Javobni ko'rish</button>
-    <div class="test-btns" id="test-ans-btns" style="display:none">
-      <button class="btn btn-green" onclick="answerQ(true)">✅ Topdim!</button>
-      <button class="btn btn-red" onclick="answerQ(false)">❌ Topa olmadim</button>
-    </div>
-    <div style="padding:16px 24px">
-      <button class="btn btn-ghost" onclick="endTest()">← Orqaga</button>
-    </div>
-  </div>
-
-  <!-- RESULTS SCREEN -->
-  <div id="results-screen">
-    <div class="header">
-      <span class="logo">24.WØRD'$</span>
-      <span class="prog-label" id="res-topic-lbl"></span>
-    </div>
-    <div class="results-score-card">
-      <div class="results-pct" id="res-pct"></div>
-      <div class="results-stats" id="res-stats"></div>
-    </div>
-    <div class="results-list" id="res-list"></div>
-    <div style="padding:16px 24px">
-      <button class="btn btn-accent" style="width:100%;padding:12px" onclick="endTest()">← Orqaga</button>
-    </div>
-  </div>
-
-  <!-- LEVEL UP SCREEN -->
-  <div id="levelup-screen">
-    <div class="levelup-title">LEVEL UP</div>
-    <div class="levelup-icon">⚡</div>
-    <div class="levelup-num" id="lu-num"></div>
-    <div class="levelup-badge" id="lu-badge"></div>
-    <br>
-    <button class="btn btn-accent" style="padding:14px 32px;font-size:14px" onclick="afterLevelUp()">🎯 Davom etish</button>
-  </div>
-
-</div>
-
-<script>
-const LEVEL_NAMES = ["Beginner","Beginner+","Elementary","Elementary+","Pre-Intermediate","Intermediate","Intermediate+","Upper-Intermediate","Advanced","Advanced+","Proficient","Master","Legend"];
-
-const PRESET_TOPICS = [{"name":"Animals","words":[{"eng":"cat","uz":"mushuk"},{"eng":"dog","uz":"it"},{"eng":"horse","uz":"ot"},{"eng":"elephant","uz":"fil"},{"eng":"lion","uz":"sher"},{"eng":"tiger","uz":"yo'lbars"},{"eng":"bear","uz":"ayiq"},{"eng":"wolf","uz":"bo'ri"},{"eng":"fox","uz":"tulki"},{"eng":"rabbit","uz":"quyon"},{"eng":"deer","uz":"kiyik"},{"eng":"monkey","uz":"maymun"},{"eng":"giraffe","uz":"jirafa"},{"eng":"zebra","uz":"zebra"},{"eng":"crocodile","uz":"timsoh"},{"eng":"snake","uz":"ilon"},{"eng":"eagle","uz":"burgut"},{"eng":"owl","uz":"boyqush"},{"eng":"parrot","uz":"to'ti"},{"eng":"dolphin","uz":"delfin"},{"eng":"shark","uz":"akula"},{"eng":"penguin","uz":"pingvin"},{"eng":"camel","uz":"tuya"},{"eng":"gorilla","uz":"gorilla"}]},{"name":"Food & Drinks","words":[{"eng":"bread","uz":"non"},{"eng":"rice","uz":"guruch"},{"eng":"meat","uz":"go'sht"},{"eng":"fish","uz":"baliq"},{"eng":"egg","uz":"tuxum"},{"eng":"milk","uz":"sut"},{"eng":"cheese","uz":"pishloq"},{"eng":"butter","uz":"sariyog'"},{"eng":"sugar","uz":"shakar"},{"eng":"salt","uz":"tuz"},{"eng":"pepper","uz":"qalampir"},{"eng":"onion","uz":"piyoz"},{"eng":"garlic","uz":"sarimsoq"},{"eng":"tomato","uz":"pomidor"},{"eng":"potato","uz":"kartoshka"},{"eng":"carrot","uz":"sabzi"},{"eng":"apple","uz":"olma"},{"eng":"orange","uz":"apelsin"},{"eng":"banana","uz":"banan"},{"eng":"grape","uz":"uzum"},{"eng":"watermelon","uz":"tarvuz"},{"eng":"tea","uz":"choy"},{"eng":"coffee","uz":"qahva"},{"eng":"water","uz":"suv"}]},{"name":"Colors","words":[{"eng":"red","uz":"qizil"},{"eng":"blue","uz":"ko'k"},{"eng":"green","uz":"yashil"},{"eng":"yellow","uz":"sariq"},{"eng":"orange","uz":"to'q sariq"},{"eng":"purple","uz":"binafsha"},{"eng":"pink","uz":"pushti"},{"eng":"brown","uz":"jigarrang"},{"eng":"black","uz":"qora"},{"eng":"white","uz":"oq"},{"eng":"gray","uz":"kulrang"},{"eng":"gold","uz":"oltin"},{"eng":"silver","uz":"kumush"},{"eng":"beige","uz":"bej"},{"eng":"navy","uz":"to'q ko'k"},{"eng":"turquoise","uz":"firuza"},{"eng":"maroon","uz":"to'q qizil"},{"eng":"olive","uz":"zaytun rangi"},{"eng":"coral","uz":"marjon rangi"},{"eng":"ivory","uz":"fil suyagi rangi"},{"eng":"crimson","uz":"qirmizi"},{"eng":"indigo","uz":"nil"},{"eng":"violet","uz":"binafsha"},{"eng":"scarlet","uz":"qizg'ish"}]},{"name":"Body Parts","words":[{"eng":"head","uz":"bosh"},{"eng":"eye","uz":"ko'z"},{"eng":"ear","uz":"quloq"},{"eng":"nose","uz":"burun"},{"eng":"mouth","uz":"og'iz"},{"eng":"tooth","uz":"tish"},{"eng":"tongue","uz":"til"},{"eng":"neck","uz":"bo'yin"},{"eng":"shoulder","uz":"yelka"},{"eng":"arm","uz":"qo'l"},{"eng":"elbow","uz":"tirsak"},{"eng":"hand","uz":"qo'l kafti"},{"eng":"finger","uz":"barmoq"},{"eng":"chest","uz":"ko'krak"},{"eng":"stomach","uz":"qorin"},{"eng":"back","uz":"orqa"},{"eng":"leg","uz":"oyoq"},{"eng":"knee","uz":"tizza"},{"eng":"foot","uz":"oyoq kafti"},{"eng":"toe","uz":"oyoq barmog'i"},{"eng":"hair","uz":"soch"},{"eng":"face","uz":"yuz"},{"eng":"lip","uz":"lab"},{"eng":"chin","uz":"iyak"}]},{"name":"Family","words":[{"eng":"mother","uz":"ona"},{"eng":"father","uz":"ota"},{"eng":"brother","uz":"aka/uka"},{"eng":"sister","uz":"opa/singil"},{"eng":"son","uz":"o'g'il"},{"eng":"daughter","uz":"qiz"},{"eng":"grandfather","uz":"buva"},{"eng":"grandmother","uz":"buvi"},{"eng":"uncle","uz":"amaki/tog'a"},{"eng":"aunt","uz":"xola/amma"},{"eng":"cousin","uz":"amakivachcha"},{"eng":"husband","uz":"er"},{"eng":"wife","uz":"xotin"},{"eng":"baby","uz":"chaqaloq"},{"eng":"child","uz":"bola"},{"eng":"parents","uz":"ota-ona"},{"eng":"family","uz":"oila"},{"eng":"relative","uz":"qarindosh"},{"eng":"twin","uz":"egizak"},{"eng":"nephew","uz":"jiyani (o'g'il)"},{"eng":"niece","uz":"jiyani (qiz)"},{"eng":"in-law","uz":"qaynota/qaynona"},{"eng":"stepfather","uz":"o'gay ota"},{"eng":"stepmother","uz":"o'gay ona"}]},{"name":"Numbers & Math","words":[{"eng":"one","uz":"bir"},{"eng":"two","uz":"ikki"},{"eng":"three","uz":"uch"},{"eng":"four","uz":"to'rt"},{"eng":"five","uz":"besh"},{"eng":"ten","uz":"o'n"},{"eng":"twenty","uz":"yigirma"},{"eng":"hundred","uz":"yuz"},{"eng":"thousand","uz":"ming"},{"eng":"million","uz":"million"},{"eng":"zero","uz":"nol"},{"eng":"half","uz":"yarim"},{"eng":"double","uz":"ikki barobar"},{"eng":"add","uz":"qo'shmoq"},{"eng":"subtract","uz":"ayirmoq"},{"eng":"multiply","uz":"ko'paytirmoq"},{"eng":"divide","uz":"bo'lmoq"},{"eng":"equal","uz":"teng"},{"eng":"number","uz":"son"},{"eng":"count","uz":"hisoblash"},{"eng":"plus","uz":"qo'shish"},{"eng":"minus","uz":"minus"},{"eng":"percent","uz":"foiz"},{"eng":"square","uz":"kvadrat"}]},{"name":"Weather","words":[{"eng":"sun","uz":"quyosh"},{"eng":"rain","uz":"yomg'ir"},{"eng":"snow","uz":"qor"},{"eng":"wind","uz":"shamol"},{"eng":"cloud","uz":"bulut"},{"eng":"storm","uz":"bo'ron"},{"eng":"thunder","uz":"momaqaldiroq"},{"eng":"lightning","uz":"chaqmoq"},{"eng":"fog","uz":"tuman"},{"eng":"ice","uz":"muz"},{"eng":"hail","uz":"do'l"},{"eng":"rainbow","uz":"kamalak"},{"eng":"temperature","uz":"harorat"},{"eng":"hot","uz":"issiq"},{"eng":"cold","uz":"sovuq"},{"eng":"warm","uz":"iliq"},{"eng":"humid","uz":"nam"},{"eng":"dry","uz":"quruq"},{"eng":"forecast","uz":"ob-havo bashorati"},{"eng":"season","uz":"fasl"},{"eng":"spring","uz":"bahor"},{"eng":"summer","uz":"yoz"},{"eng":"autumn","uz":"kuz"},{"eng":"winter","uz":"qish"}]},{"name":"Travel","words":[{"eng":"airport","uz":"aeroport"},{"eng":"ticket","uz":"chipta"},{"eng":"passport","uz":"pasport"},{"eng":"hotel","uz":"mehmonxona"},{"eng":"luggage","uz":"bagaj"},{"eng":"flight","uz":"parvoz"},{"eng":"train","uz":"poezd"},{"eng":"bus","uz":"avtobus"},{"eng":"taxi","uz":"taksi"},{"eng":"map","uz":"xarita"},{"eng":"tour","uz":"sayohat"},{"eng":"visa","uz":"viza"},{"eng":"border","uz":"chegara"},{"eng":"customs","uz":"bojxona"},{"eng":"currency","uz":"valyuta"},{"eng":"reservation","uz":"bron"},{"eng":"check-in","uz":"ro'yxatdan o'tish"},{"eng":"destination","uz":"manzil"},{"eng":"departure","uz":"jo'nash"},{"eng":"arrival","uz":"kelish"},{"eng":"souvenir","uz":"sovg'a-esdalik"},{"eng":"guide","uz":"gid"},{"eng":"trip","uz":"safar"},{"eng":"journey","uz":"yo'l"}]},{"name":"Technology","words":[{"eng":"computer","uz":"kompyuter"},{"eng":"phone","uz":"telefon"},{"eng":"internet","uz":"internet"},{"eng":"software","uz":"dastur"},{"eng":"hardware","uz":"uskunalar"},{"eng":"keyboard","uz":"klaviatura"},{"eng":"screen","uz":"ekran"},{"eng":"mouse","uz":"sichqoncha"},{"eng":"battery","uz":"batareya"},{"eng":"charger","uz":"zaryadlovchi"},{"eng":"camera","uz":"kamera"},{"eng":"password","uz":"parol"},{"eng":"download","uz":"yuklab olish"},{"eng":"upload","uz":"yuklash"},{"eng":"website","uz":"veb-sayt"},{"eng":"application","uz":"ilova"},{"eng":"update","uz":"yangilash"},{"eng":"delete","uz":"o'chirish"},{"eng":"search","uz":"qidirish"},{"eng":"message","uz":"xabar"},{"eng":"network","uz":"tarmoq"},{"eng":"wifi","uz":"wi-fi"},{"eng":"bluetooth","uz":"bluetooth"},{"eng":"storage","uz":"xotira"}]},{"name":"School & Education","words":[{"eng":"school","uz":"maktab"},{"eng":"teacher","uz":"o'qituvchi"},{"eng":"student","uz":"o'quvchi"},{"eng":"lesson","uz":"dars"},{"eng":"homework","uz":"uy vazifasi"},{"eng":"exam","uz":"imtihon"},{"eng":"grade","uz":"baho"},{"eng":"class","uz":"sinf"},{"eng":"book","uz":"kitob"},{"eng":"pen","uz":"ruchka"},{"eng":"pencil","uz":"qalam"},{"eng":"notebook","uz":"daftar"},{"eng":"eraser","uz":"o'chirg'ich"},{"eng":"ruler","uz":"chizg'ich"},{"eng":"backpack","uz":"sumka"},{"eng":"library","uz":"kutubxona"},{"eng":"university","uz":"universitet"},{"eng":"diploma","uz":"diplom"},{"eng":"subject","uz":"fan"},{"eng":"knowledge","uz":"bilim"},{"eng":"study","uz":"o'qish"},{"eng":"learn","uz":"o'rganish"},{"eng":"quiz","uz":"viktorina"},{"eng":"certificate","uz":"sertifikat"}]},{"name":"Health & Body","words":[{"eng":"doctor","uz":"shifokor"},{"eng":"hospital","uz":"kasalxona"},{"eng":"medicine","uz":"dori"},{"eng":"pain","uz":"og'riq"},{"eng":"fever","uz":"harorat"},{"eng":"cough","uz":"yo'tal"},{"eng":"cold","uz":"shamollash"},{"eng":"headache","uz":"bosh og'rig'i"},{"eng":"healthy","uz":"sog'lom"},{"eng":"sick","uz":"kasal"},{"eng":"surgery","uz":"operatsiya"},{"eng":"bandage","uz":"bog'lam"},{"eng":"injection","uz":"ukol"},{"eng":"vitamin","uz":"vitamin"},{"eng":"allergy","uz":"allergiya"},{"eng":"blood","uz":"qon"},{"eng":"heart","uz":"yurak"},{"eng":"lung","uz":"o'pka"},{"eng":"bone","uz":"suyak"},{"eng":"muscle","uz":"muskul"},{"eng":"exercise","uz":"mashq"},{"eng":"diet","uz":"parhez"},{"eng":"sleep","uz":"uyqu"},{"eng":"rest","uz":"dam olish"}]},{"name":"Emotions","words":[{"eng":"happy","uz":"xursand"},{"eng":"sad","uz":"xafa"},{"eng":"angry","uz":"g'azablangan"},{"eng":"scared","uz":"qo'rqqan"},{"eng":"surprised","uz":"hayron"},{"eng":"excited","uz":"hayajonlangan"},{"eng":"bored","uz":"zerikkan"},{"eng":"tired","uz":"charchagan"},{"eng":"proud","uz":"mag'rur"},{"eng":"ashamed","uz":"uyalgan"},{"eng":"jealous","uz":"hasad qilgan"},{"eng":"lonely","uz":"yolg'iz"},{"eng":"nervous","uz":"asabiy"},{"eng":"calm","uz":"tinch"},{"eng":"love","uz":"sevgi"},{"eng":"hate","uz":"nafrat"},{"eng":"hope","uz":"umid"},{"eng":"fear","uz":"qo'rquv"},{"eng":"joy","uz":"quvonch"},{"eng":"grief","uz":"qayg'u"},{"eng":"courage","uz":"jasorat"},{"eng":"worry","uz":"tashvish"},{"eng":"relief","uz":"yengillik"},{"eng":"disgust","uz":"jirkanish"}]},{"name":"House & Home","words":[{"eng":"house","uz":"uy"},{"eng":"room","uz":"xona"},{"eng":"kitchen","uz":"oshxona"},{"eng":"bedroom","uz":"yotoqxona"},{"eng":"bathroom","uz":"hammom"},{"eng":"living room","uz":"mehmonxona"},{"eng":"door","uz":"eshik"},{"eng":"window","uz":"deraza"},{"eng":"floor","uz":"pol"},{"eng":"ceiling","uz":"shift"},{"eng":"wall","uz":"devor"},{"eng":"furniture","uz":"mebel"},{"eng":"table","uz":"stol"},{"eng":"chair","uz":"stul"},{"eng":"bed","uz":"karavot"},{"eng":"sofa","uz":"divan"},{"eng":"lamp","uz":"chiroq"},{"eng":"mirror","uz":"oyna"},{"eng":"carpet","uz":"gilam"},{"eng":"curtain","uz":"parda"},{"eng":"stairs","uz":"zinapoya"},{"eng":"roof","uz":"tom"},{"eng":"garage","uz":"garaj"},{"eng":"garden","uz":"bog'"}]},{"name":"Clothes","words":[{"eng":"shirt","uz":"ko'ylak"},{"eng":"trousers","uz":"shim"},{"eng":"dress","uz":"ko'ylak (ayol)"},{"eng":"jacket","uz":"kurtka"},{"eng":"coat","uz":"palto"},{"eng":"shoes","uz":"tufli"},{"eng":"boots","uz":"etik"},{"eng":"socks","uz":"paypoq"},{"eng":"hat","uz":"shapka"},{"eng":"scarf","uz":"sharf"},{"eng":"gloves","uz":"qo'lqop"},{"eng":"belt","uz":"kamar"},{"eng":"tie","uz":"galstuk"},{"eng":"suit","uz":"kostyum"},{"eng":"jeans","uz":"jinsi shim"},{"eng":"sweater","uz":"sviter"},{"eng":"skirt","uz":"yubka"},{"eng":"uniform","uz":"forma"},{"eng":"underwear","uz":"ichki kiyim"},{"eng":"pocket","uz":"cho'ntak"},{"eng":"button","uz":"tugma"},{"eng":"zipper","uz":"zamok"},{"eng":"sleeve","uz":"yeng"},{"eng":"collar","uz":"yoqa"}]},{"name":"Sports","words":[{"eng":"football","uz":"futbol"},{"eng":"basketball","uz":"basketbol"},{"eng":"tennis","uz":"tennis"},{"eng":"swimming","uz":"suzish"},{"eng":"running","uz":"yugurish"},{"eng":"boxing","uz":"boks"},{"eng":"volleyball","uz":"voleybol"},{"eng":"cycling","uz":"velosiped sporti"},{"eng":"gymnastics","uz":"gimnastika"},{"eng":"wrestling","uz":"kurash"},{"eng":"team","uz":"jamoa"},{"eng":"player","uz":"o'yinchi"},{"eng":"coach","uz":"murabbiy"},{"eng":"stadium","uz":"stadion"},{"eng":"goal","uz":"gol"},{"eng":"score","uz":"hisob"},{"eng":"champion","uz":"chempion"},{"eng":"medal","uz":"medal"},{"eng":"tournament","uz":"turnir"},{"eng":"match","uz":"o'yin"},{"eng":"win","uz":"g'alaba"},{"eng":"lose","uz":"mag'lubiyat"},{"eng":"draw","uz":"durrang"},{"eng":"referee","uz":"hakam"}]},{"name":"Nature","words":[{"eng":"mountain","uz":"tog'"},{"eng":"river","uz":"daryo"},{"eng":"sea","uz":"dengiz"},{"eng":"ocean","uz":"okean"},{"eng":"forest","uz":"o'rmon"},{"eng":"desert","uz":"cho'l"},{"eng":"island","uz":"orol"},{"eng":"valley","uz":"vodiy"},{"eng":"cliff","uz":"qoya"},{"eng":"waterfall","uz":"sharsara"},{"eng":"lake","uz":"ko'l"},{"eng":"grass","uz":"o't"},{"eng":"tree","uz":"daraxt"},{"eng":"flower","uz":"gul"},{"eng":"leaf","uz":"barg"},{"eng":"root","uz":"ildiz"},{"eng":"rock","uz":"tosh"},{"eng":"sand","uz":"qum"},{"eng":"soil","uz":"tuproq"},{"eng":"sky","uz":"osmon"},{"eng":"star","uz":"yulduz"},{"eng":"moon","uz":"oy"},{"eng":"sun","uz":"quyosh"},{"eng":"earth","uz":"yer"}]},{"name":"Professions","words":[{"eng":"doctor","uz":"shifokor"},{"eng":"teacher","uz":"o'qituvchi"},{"eng":"engineer","uz":"muhandis"},{"eng":"lawyer","uz":"advokat"},{"eng":"pilot","uz":"uchuvchi"},{"eng":"chef","uz":"oshpaz"},{"eng":"driver","uz":"haydovchi"},{"eng":"farmer","uz":"dehqon"},{"eng":"soldier","uz":"askar"},{"eng":"police","uz":"politsiyachi"},{"eng":"firefighter","uz":"o't o'chiruvchi"},{"eng":"nurse","uz":"hamshira"},{"eng":"architect","uz":"me'mor"},{"eng":"journalist","uz":"jurnalist"},{"eng":"artist","uz":"rassom"},{"eng":"musician","uz":"musiqachi"},{"eng":"actor","uz":"aktyor"},{"eng":"writer","uz":"yozuvchi"},{"eng":"scientist","uz":"olim"},{"eng":"programmer","uz":"dasturchi"},{"eng":"dentist","uz":"tish shifokori"},{"eng":"pharmacist","uz":"dorixonachi"},{"eng":"accountant","uz":"buxgalter"},{"eng":"electrician","uz":"elektrchi"}]},{"name":"City & Places","words":[{"eng":"city","uz":"shahar"},{"eng":"street","uz":"ko'cha"},{"eng":"square","uz":"maydon"},{"eng":"park","uz":"bog'"},{"eng":"market","uz":"bozor"},{"eng":"shop","uz":"do'kon"},{"eng":"bank","uz":"bank"},{"eng":"mosque","uz":"masjid"},{"eng":"church","uz":"cherkov"},{"eng":"museum","uz":"muzey"},{"eng":"theater","uz":"teatr"},{"eng":"cinema","uz":"kino"},{"eng":"restaurant","uz":"restoran"},{"eng":"cafe","uz":"kafe"},{"eng":"pharmacy","uz":"dorixona"},{"eng":"post office","uz":"pochta"},{"eng":"police station","uz":"politsiya"},{"eng":"school","uz":"maktab"},{"eng":"hospital","uz":"kasalxona"},{"eng":"bridge","uz":"ko'prik"},{"eng":"road","uz":"yo'l"},{"eng":"traffic","uz":"transport harakati"},{"eng":"crossroad","uz":"chorraxa"},{"eng":"neighborhood","uz":"mahalla"}]},{"name":"Time & Calendar","words":[{"eng":"second","uz":"soniya"},{"eng":"minute","uz":"daqiqa"},{"eng":"hour","uz":"soat"},{"eng":"day","uz":"kun"},{"eng":"week","uz":"hafta"},{"eng":"month","uz":"oy"},{"eng":"year","uz":"yil"},{"eng":"today","uz":"bugun"},{"eng":"yesterday","uz":"kecha"},{"eng":"tomorrow","uz":"ertaga"},{"eng":"morning","uz":"ertalab"},{"eng":"afternoon","uz":"tushdan keyin"},{"eng":"evening","uz":"kechqurun"},{"eng":"night","uz":"kecha"},{"eng":"midnight","uz":"yarim kecha"},{"eng":"Monday","uz":"dushanba"},{"eng":"Friday","uz":"juma"},{"eng":"weekend","uz":"dam olish kuni"},{"eng":"holiday","uz":"bayram"},{"eng":"birthday","uz":"tug'ilgan kun"},{"eng":"century","uz":"asr"},{"eng":"decade","uz":"o'n yillik"},{"eng":"past","uz":"o'tmish"},{"eng":"future","uz":"kelajak"}]},{"name":"Verbs – Action","words":[{"eng":"run","uz":"yugurmoq"},{"eng":"walk","uz":"yurmoq"},{"eng":"jump","uz":"sakramoq"},{"eng":"sit","uz":"o'tirmoq"},{"eng":"stand","uz":"turmoq"},{"eng":"eat","uz":"yemoq"},{"eng":"drink","uz":"ichmoq"},{"eng":"sleep","uz":"uxlamoq"},{"eng":"wake up","uz":"uyg'onmoq"},{"eng":"write","uz":"yozmoq"},{"eng":"read","uz":"o'qimoq"},{"eng":"speak","uz":"gapirmoq"},{"eng":"listen","uz":"tinglash"},{"eng":"watch","uz":"tomosha qilmoq"},{"eng":"cook","uz":"pishirmoq"},{"eng":"clean","uz":"tozalamoq"},{"eng":"build","uz":"qurmoq"},{"eng":"open","uz":"ochmoq"},{"eng":"close","uz":"yopmoq"},{"eng":"buy","uz":"sotib olmoq"},{"eng":"sell","uz":"sotmoq"},{"eng":"give","uz":"bermoq"},{"eng":"take","uz":"olmoq"},{"eng":"throw","uz":"otmoq"}]},{"name":"Adjectives","words":[{"eng":"big","uz":"katta"},{"eng":"small","uz":"kichik"},{"eng":"tall","uz":"baland"},{"eng":"short","uz":"past"},{"eng":"long","uz":"uzun"},{"eng":"wide","uz":"keng"},{"eng":"narrow","uz":"tor"},{"eng":"heavy","uz":"og'ir"},{"eng":"light","uz":"yengil"},{"eng":"fast","uz":"tez"},{"eng":"slow","uz":"sekin"},{"eng":"new","uz":"yangi"},{"eng":"old","uz":"eski"},{"eng":"young","uz":"yosh"},{"eng":"beautiful","uz":"chiroyli"},{"eng":"ugly","uz":"xunuk"},{"eng":"clean","uz":"toza"},{"eng":"dirty","uz":"iflos"},{"eng":"hard","uz":"qattiq"},{"eng":"soft","uz":"yumshoq"},{"eng":"rich","uz":"boy"},{"eng":"poor","uz":"kambag'al"},{"eng":"strong","uz":"kuchli"},{"eng":"weak","uz":"kuchsiz"}]},{"name":"Science","words":[{"eng":"atom","uz":"atom"},{"eng":"molecule","uz":"molekula"},{"eng":"energy","uz":"energiya"},{"eng":"force","uz":"kuch"},{"eng":"gravity","uz":"tortishish"},{"eng":"electricity","uz":"elektr"},{"eng":"magnet","uz":"magnit"},{"eng":"chemical","uz":"kimyoviy"},{"eng":"reaction","uz":"reaktsiya"},{"eng":"element","uz":"element"},{"eng":"experiment","uz":"tajriba"},{"eng":"laboratory","uz":"laboratoriya"},{"eng":"microscope","uz":"mikroskop"},{"eng":"telescope","uz":"teleskop"},{"eng":"theory","uz":"nazariya"},{"eng":"hypothesis","uz":"gipoteza"},{"eng":"evidence","uz":"dalil"},{"eng":"biology","uz":"biologiya"},{"eng":"physics","uz":"fizika"},{"eng":"chemistry","uz":"kimyo"},{"eng":"astronomy","uz":"astronomiya"},{"eng":"geology","uz":"geologiya"},{"eng":"evolution","uz":"evolyutsiya"},{"eng":"cell","uz":"hujayra"}]},{"name":"Business","words":[{"eng":"money","uz":"pul"},{"eng":"price","uz":"narx"},{"eng":"profit","uz":"foyda"},{"eng":"loss","uz":"zarar"},{"eng":"budget","uz":"byudjet"},{"eng":"salary","uz":"maosh"},{"eng":"tax","uz":"soliq"},{"eng":"investment","uz":"investitsiya"},{"eng":"company","uz":"kompaniya"},{"eng":"contract","uz":"shartnoma"},{"eng":"client","uz":"mijoz"},{"eng":"product","uz":"mahsulot"},{"eng":"service","uz":"xizmat"},{"eng":"market","uz":"bozor"},{"eng":"brand","uz":"brend"},{"eng":"advertisement","uz":"reklama"},{"eng":"discount","uz":"chegirma"},{"eng":"invoice","uz":"hisob-faktura"},{"eng":"deadline","uz":"muddat"},{"eng":"meeting","uz":"uchrashuv"},{"eng":"manager","uz":"menejer"},{"eng":"employee","uz":"xodim"},{"eng":"boss","uz":"xo'jayin"},{"eng":"office","uz":"ofis"}]},{"name":"Prepositions & Grammar","words":[{"eng":"in","uz":"ichida"},{"eng":"on","uz":"ustida"},{"eng":"under","uz":"ostida"},{"eng":"above","uz":"yuqorida"},{"eng":"below","uz":"quyida"},{"eng":"between","uz":"orasida"},{"eng":"beside","uz":"yonida"},{"eng":"behind","uz":"orqasida"},{"eng":"in front of","uz":"oldida"},{"eng":"near","uz":"yaqinida"},{"eng":"far","uz":"uzoqda"},{"eng":"through","uz":"orqali"},{"eng":"along","uz":"bo'ylab"},{"eng":"across","uz":"narigi tomonda"},{"eng":"against","uz":"qarshi"},{"eng":"without","uz":"siz"},{"eng":"with","uz":"bilan"},{"eng":"by","uz":"tomonidan"},{"eng":"for","uz":"uchun"},{"eng":"from","uz":"dan"},{"eng":"to","uz":"ga"},{"eng":"into","uz":"ichiga"},{"eng":"out of","uz":"tashqariga"},{"eng":"toward","uz":"tomon"}]},{"name":"Phrases & Greetings","words":[{"eng":"hello","uz":"salom"},{"eng":"goodbye","uz":"xayr"},{"eng":"please","uz":"iltimos"},{"eng":"thank you","uz":"rahmat"},{"eng":"sorry","uz":"kechirasiz"},{"eng":"excuse me","uz":"uzr"},{"eng":"yes","uz":"ha"},{"eng":"no","uz":"yo'q"},{"eng":"maybe","uz":"balki"},{"eng":"of course","uz":"albatta"},{"eng":"good morning","uz":"xayrli tong"},{"eng":"good night","uz":"xayrli tun"},{"eng":"how are you","uz":"yaxshimisiz"},{"eng":"I'm fine","uz":"yaxshiman"},{"eng":"nice to meet you","uz":"tanishganimdan xursandman"},{"eng":"congratulations","uz":"tabriklayman"},{"eng":"well done","uz":"barakalla"},{"eng":"never mind","uz":"mayli"},{"eng":"be careful","uz":"ehtiyot bo'ling"},{"eng":"good luck","uz":"omad"},{"eng":"happy birthday","uz":"tug'ilgan kuningiz bilan"},{"eng":"welcome","uz":"xush kelibsiz"},{"eng":"help me","uz":"yordam bering"},{"eng":"I don't know","uz":"bilmayman"}]}];
-
-// STATE
-let state = loadState();
-let currentTopic = null;
-let isPresetsMode = false;
-let currentPreset = null;
-let addMode = null; // 'topic' | 'word'
-
-// TEST STATE
-let testWords = [], testQueue = [], testIdx = 0, testResults = [];
-let testStartTime = 0, testTimerInterval = null;
-let testTopicName = '', testIsPreset = false, testPresetName = '';
-let afterTestFn = null;
-
-function loadState() {
-  try {
-    const raw = localStorage.getItem('24words_state');
-    if (raw) {
-      const d = JSON.parse(raw);
-      if (!d.level) d.level = 1;
-      if (!d.exp) d.exp = 0;
-      if (!d.completed_topics) d.completed_topics = [];
-      if (!d.completed_preset_topics) d.completed_preset_topics = [];
-      return d;
-    }
-  } catch(e) {}
-  return { topics: [], level: 1, exp: 0, completed_topics: [], completed_preset_topics: [] };
+    margin-right: 20px;
+    margin-left: auto;
 }
+            .btn {
+                border: none;
+                cursor: pointer;
+                font-family: inherit;
+                font-weight: 600;
+                border-radius: 8px;
+                transition: opacity 0.15s;
+                white-space: nowrap;
+            }
+            .btn:hover { opacity: 0.85; }
+            .btn-accent {
+                background: var(--accent);
+                color: #fff;
+                padding: 8px 16px;
+                font-size: 13px;
+            }
+            .btn-dim {
+                background: var(--accent-dim);
+                color: var(--accent);
+                padding: 8px 14px;
+                font-size: 12px;
+            }
+            .btn-ghost {
+                background: transparent;
+                color: var(--subtext);
+                padding: 8px 12px;
+                font-size: 12px;
+                border: 1px solid var(--border);
+            }
+            .btn-green {
+                background: var(--green-bg);
+                color: var(--green);
+                padding: 10px 18px;
+                font-size: 13px;
+            }
+            .btn-red {
+                background: var(--red-bg);
+                color: var(--red);
+                padding: 10px 18px;
+                font-size: 13px;
+            }
 
-function saveState() {
-  localStorage.setItem('24words_state', JSON.stringify(state));
-}
+            /* BREADCRUMB */
+            .bread { padding: 8px 24px 0; }
+            .bread a {
+                color: var(--accent);
+                font-size: 13px;
+                cursor: pointer;
+                text-decoration: none;
+            }
+            .bread a:hover { text-decoration: underline; }
 
-function updateStatsDisplay() {
-  document.getElementById('lv-badge').textContent = 'Lv.' + state.level;
-  document.getElementById('exp-label').textContent = state.exp + ' EXP';
-}
+            /* SEARCH */
+            .search-wrap { padding: 10px 24px; }
+            .search-input {
+                width: 100%;
+                background: var(--input-bg);
+                border: none;
+                border-bottom: 1px solid var(--border);
+                color: var(--text);
+                font-family: inherit;
+                font-size: 14px;
+                padding: 10px 4px;
+                outline: none;
+                transition: border-color 0.15s, background 0.25s, color 0.25s;
+            }
+            .search-input::placeholder { color: var(--hint); }
+            .search-input:focus { border-bottom-color: var(--accent); }
 
-// ===== SCREEN SWITCHER =====
-function showScreen(id) {
-  ['main-screen','test-screen','results-screen','levelup-screen'].forEach(s => {
-    document.getElementById(s).style.display = s === id ? 'block' : 'none';
-  });
-}
+            /* ADD PANEL */
+            .add-panel {
+                background: var(--card);
+                padding: 20px 24px;
+                border-bottom: 1px solid var(--sep);
+                display: none;
+                transition: background 0.25s;
+            }
+            .add-panel.open { display: block; }
+            .add-panel label {
+                display: block;
+                color: var(--subtext);
+                font-size: 11px;
+                font-weight: 700;
+                margin-bottom: 10px;
+                letter-spacing: 0.5px;
+                text-transform: uppercase;
+            }
+            .add-input-wrap { margin-bottom: 12px; }
+            .add-input {
+                width: 100%;
+                background: var(--input-bg);
+                border: none;
+                border-bottom: 1px solid var(--border);
+                color: var(--text);
+                font-family: inherit;
+                font-size: 15px;
+                padding: 10px 4px;
+                outline: none;
+                transition: border-color 0.15s, background 0.25s, color 0.25s;
+            }
+            .add-input::placeholder { color: var(--hint); }
+            .add-input:focus { border-bottom-color: var(--accent); }
+            .add-panel-footer {
+                display: flex;
+                justify-content: flex-end;
+                padding-top: 6px;
+            }
 
-// ===== HOME =====
-function goHome() {
-  currentTopic = null;
-  isPresetsMode = false;
-  currentPreset = null;
-  hideAddPanel();
-  updateBread();
-  document.getElementById('presets-btn').style.display = '';
-  document.getElementById('action-btn').textContent = '＋ Yangi mavzu';
-  document.getElementById('test-btn').style.display = 'none';
-  document.getElementById('search-input').value = '';
-  updateStatsDisplay();
-  refresh();
-}
+            /* INFO BAR */
+            .info-bar {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                padding: 8px 24px;
+                border-bottom: 1px solid var(--sep);
+            }
+            .count-label { color: var(--subtext); font-size: 12px; }
 
-// ===== BREAD =====
-function updateBread() {
-  const bread = document.getElementById('bread');
-  if (currentTopic || isPresetsMode) {
-    bread.innerHTML = '<a onclick="goHome()">← Orqaga</a>';
-    if (currentPreset) {
-      bread.innerHTML += ' &nbsp; <a onclick="openPresets()">' + currentPreset.name + '</a>';
-    }
-  } else {
-    bread.innerHTML = '';
-  }
-}
+            /* LIST */
+            .list {
+                padding: 12px 24px 0;
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+            }
 
-// ===== REFRESH =====
-function refresh() {
-  const list = document.getElementById('list');
-  const q = document.getElementById('search-input').value.trim().toLowerCase();
-  list.innerHTML = '';
+            /* TOPIC CARD */
+            .topic-card {
+                background: var(--card);
+                border-radius: 10px;
+                display: flex;
+                align-items: stretch;
+                cursor: pointer;
+                overflow: hidden;
+                transition: background 0.12s;
+            }
+            .topic-card:hover { filter: brightness(0.96); }
+            .topic-bar { width: 3px; background: var(--accent); flex-shrink: 0; }
+            .topic-body { flex: 1; padding: 14px 16px; min-width: 0; }
+            .topic-name { font-size: 15px; font-weight: 700; color: var(--text); }
+            .topic-meta { font-size: 11px; color: var(--subtext); margin-top: 4px; }
+            .topic-del {
+                background: none;
+                border: none;
+                cursor: pointer;
+                color: var(--delete);
+                font-size: 16px;
+                padding: 0 14px;
+                flex-shrink: 0;
+                opacity: 0.7;
+            }
+            .topic-del:hover { opacity: 1; }
 
-  if (isPresetsMode) {
-    renderPresets(list, q);
-    return;
-  }
-  if (currentTopic) {
-    renderWords(list, q);
-    return;
-  }
-  renderTopics(list, q);
-}
+            /* WORD CARD */
+            .word-card {
+                background: var(--card);
+                border-radius: 10px;
+                overflow: hidden;
+                transition: background 0.25s;
+            }
+            .word-row { display: flex; align-items: stretch; }
+            .word-uz {
+                flex: 1; padding: 12px 14px;
+                font-size: 14px; font-weight: 700;
+                color: var(--text); text-align: right;
+            }
+            .word-divider { width: 2px; background: var(--accent); flex-shrink: 0; }
+            .word-eng {
+                flex: 1; padding: 12px 14px;
+                font-size: 14px; font-weight: 700;
+                color: var(--accent); text-align: left;
+            }
+            .word-del {
+                background: none; border: none;
+                cursor: pointer; color: var(--delete);
+                font-size: 14px; padding: 0 12px; opacity: 0.6;
+            }
+            .word-del:hover { opacity: 1; }
+            .word-date { padding: 4px 14px 8px; }
+            .word-date span {
+                background: var(--tag-bg);
+                color: var(--tag-fg);
+                font-size: 10px; padding: 2px 6px; border-radius: 4px;
+            }
 
-function renderTopics(list, q) {
-  const topics = q
-    ? state.topics.filter(t => t.name.toLowerCase().includes(q))
-    : state.topics;
-  const total = topics.reduce((s, t) => s + t.words.length, 0);
-  document.getElementById('count-label').textContent = topics.length + ' mavzu  ·  ' + total + " so'z";
-  document.getElementById('test-btn').style.display = 'none';
-  if (!topics.length) { list.innerHTML = '<div class="empty">Mavzu yo\'q.  ＋ tugmasi bosing</div>'; return; }
-  topics.forEach(t => list.appendChild(topicCard(t)));
-}
+            /* EMPTY */
+            .empty {
+                text-align: center; padding: 60px 24px;
+                color: var(--hint); font-size: 14px;
+            }
 
-function renderWords(list, q) {
-  const words = currentTopic.words;
-  const filtered = q ? words.filter(w => w.eng.toLowerCase().includes(q) || (w.uz||'').toLowerCase().includes(q)) : words;
-  document.getElementById('count-label').textContent = filtered.length + " so'z" + (q ? '  (jami ' + words.length + ')' : '');
-  document.getElementById('test-btn').style.display = '';
-  if (!filtered.length) { list.innerHTML = '<div class="empty">So\'z yo\'q</div>'; return; }
-  filtered.forEach((w, i) => {
-    const ri = words.indexOf(w);
-    list.appendChild(wordCard(w, ri));
-  });
-}
+            .sep-line { height: 1px; background: var(--sep); margin: 8px 24px; }
 
-function renderPresets(list, q) {
-  document.getElementById('test-btn').style.display = 'none';
-  document.getElementById('count-label').textContent = PRESET_TOPICS.length + ' tayyor mavzu';
+            /* TEST SCREEN */
+            #test-screen { display: none; }
+            .test-progress-bar {
+                height: 3px; background: var(--sep);
+                margin: 0 24px; border-radius: 2px; overflow: hidden;
+            }
+            .test-progress-fill {
+                height: 100%; background: var(--accent);
+                width: 0%; transition: width 0.3s;
+            }
+            .test-topic-label { padding: 8px 24px; color: var(--subtext); font-size: 12px; }
+            .test-card {
+                background: var(--card);
+                margin: 12px 24px; border-radius: 12px; padding: 28px 24px;
+                transition: background 0.25s;
+            }
+            .test-hint {
+                color: var(--subtext); font-size: 11px;
+                text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 12px;
+            }
+            .test-word {
+                font-size: 32px; font-weight: 700; color: var(--text);
+                margin-bottom: 16px; line-height: 1.2;
+            }
+            .test-timer { text-align: right; color: var(--accent); font-size: 13px; font-weight: 700; }
+            .test-timer.hard { color: var(--red); }
+            .test-answer-reveal {
+                padding: 4px 24px 12px; font-size: 16px;
+                color: var(--text); min-height: 32px;
+            }
+            .test-btns { padding: 0 24px; display: flex; gap: 12px; }
+            .test-btns .btn { flex: 1; }
+            .btn-show {
+                display: block; width: calc(100% - 48px);
+                margin: 0 24px 8px; font-size: 14px;
+            }
 
-  if (currentPreset) {
-    renderPresetWords(list, currentPreset);
-    return;
-  }
+            /* RESULTS */
+            #results-screen { display: none; }
+            .results-score-card {
+                background: var(--card); margin: 12px 24px;
+                border-radius: 12px; padding: 20px 24px;
+                display: flex; align-items: center; gap: 20px;
+                transition: background 0.25s;
+            }
+            .results-pct { font-size: 52px; font-weight: 700; line-height: 1; }
+            .results-stats { display: flex; flex-direction: column; gap: 4px; }
+            .results-stats span { font-size: 13px; }
+            .results-list { padding: 0 24px; display: flex; flex-direction: column; gap: 0; margin-top: 8px; }
+            .results-section-title { font-size: 12px; font-weight: 700; padding: 10px 0 6px; letter-spacing: 0.4px; }
+            .results-row {
+                display: flex; align-items: center; justify-content: space-between;
+                padding: 10px 14px; border-radius: 8px; margin-bottom: 4px;
+            }
+            .results-row-left { font-size: 13px; font-weight: 700; }
+            .results-row-right { font-size: 11px; opacity: 0.7; }
 
-  const filtered = q ? PRESET_TOPICS.filter(p => p.name.toLowerCase().includes(q)) : PRESET_TOPICS;
-  if (!filtered.length) { list.innerHTML = '<div class="empty">Topilmadi</div>'; return; }
-  filtered.forEach(pt => {
-    const card = document.createElement('div');
-    card.className = 'topic-card';
-    card.style.cursor = 'pointer';
-    const preview = pt.words.slice(0, 4).map(w => w.eng).join('  ·  ') + '  ...';
-    card.innerHTML = `
-      <div class="topic-bar"></div>
-      <div class="topic-body">
-        <div class="topic-name">${pt.name}</div>
-        <div class="topic-meta">${preview}</div>
-      </div>
-      <div style="display:flex;align-items:center;padding:0 16px;color:var(--accent);font-size:13px;font-weight:700">${pt.words.length} so'z  ›</div>
-    `;
-    card.onclick = () => { currentPreset = pt; updateBread(); refresh(); };
-    list.appendChild(card);
-  });
-}
+            /* LEVEL UP */
+            #levelup-screen { display: none; text-align: center; padding: 60px 24px; }
+            .levelup-title { font-size: 56px; font-weight: 700; color: var(--accent); letter-spacing: -2px; }
+            .levelup-icon { font-size: 44px; margin: 8px 0; }
+            .levelup-num { font-size: 30px; font-weight: 700; color: var(--text); margin: 16px 0 8px; }
+            .levelup-badge {
+                display: inline-block; background: var(--accent-dim); color: var(--accent);
+                font-size: 17px; font-weight: 700; padding: 10px 28px;
+                border-radius: 10px; margin-bottom: 32px;
+            }
+            .prog-label { color: var(--subtext); font-size: 12px; margin-left: auto; }
+        </style>
+    </head>
+    <body>
+        <div id="app">
+            <!-- MAIN SCREEN -->
+            <div id="main-screen">
+                <div class="header">
+                    <span class="logo" onclick="goHome()">24.WØRD'$</span>
+                    <div class="stats">
+                        <span class="lv-badge" id="lv-badge">Lv.1</span>
+                        <span class="exp-label" id="exp-label">0 EXP</span>
+                    </div>
+                    <div class="header-btns">
+                        <button class="theme-toggle" id="theme-toggle" onclick="toggleTheme()" title="Rejimni almashtirish">🌙</button>
+                        <button class="btn btn-dim" id="presets-btn" onclick="openPresets()">
+                            📚 Tayyor mavzular
+                        </button>
+                    </div>
+                </div>
 
-function renderPresetWords(list, pt) {
-  document.getElementById('test-btn').style.display = '';
-  document.getElementById('count-label').textContent = pt.words.length + " so'z";
-  pt.words.forEach((w, i) => {
-    const row = document.createElement('div');
-    row.className = 'word-card';
-    row.innerHTML = `
-      <div class="word-row">
-        <div style="width:36px;display:flex;align-items:center;justify-content:center;color:var(--subtext);font-size:11px;padding-left:8px">${i+1}.</div>
-        <div class="word-uz">${w.uz||''}</div>
-        <div class="word-divider"></div>
-        <div class="word-eng">${w.eng}</div>
-      </div>
-    `;
-    list.appendChild(row);
-  });
-}
+                <div class="bread" id="bread"></div>
+                <div class="search-wrap">
+                    <input class="search-input" id="search-input" placeholder="🔍  Qidirish..." oninput="refresh()" />
+                </div>
+                <button class="btny" id="action-btn" onclick="actionBtn()">＋ Yangi mavzu</button>
 
-// ===== TOPIC CARD =====
-function topicCard(t) {
-  const card = document.createElement('div');
-  card.className = 'topic-card';
-  card.innerHTML = `
-    <div class="topic-bar"></div>
-    <div class="topic-body">
-      <div class="topic-name">${t.name}</div>
-      <div class="topic-meta">${t.words.length} ta so'z  ·  ${t.date||''}</div>
-    </div>
-    <button class="topic-del" title="O'chirish">🗑</button>
-  `;
-  card.querySelector('.topic-body').onclick = () => openTopic(t);
-  card.querySelector('.topic-name').onclick = () => openTopic(t);
-  card.querySelector('.topic-del').onclick = (e) => { e.stopPropagation(); deleteTopic(t); };
-  return card;
-}
+                <!-- ADD PANEL -->
+                <div class="add-panel" id="add-panel">
+                    <label id="add-label">Yangi mavzu nomi:</label>
+                    <div class="add-input-wrap">
+                        <input class="add-input" id="add-f1" placeholder="" />
+                    </div>
+                    <div class="add-input-wrap" id="add-f2-wrap" style="display: none">
+                        <div style="color: var(--subtext); font-size: 11px; margin-bottom: 6px;">O'zbekcha tarjimasi</div>
+                        <input class="add-input" id="add-f2" placeholder="O'zbekcha tarjimasi..." />
+                    </div>
+                    <div class="add-panel-footer">
+                        <button class="btn btn-accent" id="add-save-btn" onclick="saveItem()">✓ Saqlash</button>
+                    </div>
+                </div>
 
-function openTopic(t) {
-  currentTopic = t;
-  document.getElementById('action-btn').textContent = '＋ Yangi so\'z';
-  document.getElementById('presets-btn').style.display = 'none';
-  hideAddPanel();
-  updateBread();
-  refresh();
-}
+                <div class="sep-line"></div>
+                <div class="info-bar">
+                    <span class="count-label" id="count-label"></span>
+                    <button class="btn btn-accent" id="test-btn" style="display: none; font-size: 12px; padding: 6px 14px;" onclick="startTest()">
+                        🧪 Test
+                    </button>
+                </div>
+                <div class="list" id="list"></div>
+            </div>
 
-function deleteTopic(t) {
-  if (!confirm('"' + t.name + '" mavzusini o\'chirasizmi?')) return;
-  state.topics = state.topics.filter(x => x !== t);
-  saveState();
-  refresh();
-}
+            <!-- TEST SCREEN -->
+            <div id="test-screen">
+                <div class="header">
+                    <span class="logo">24.WØRD'$</span>
+                    <button class="theme-toggle" onclick="toggleTheme()" id="theme-toggle-test">🌙</button>
+                    <span class="prog-label" id="test-prog"></span>
+                </div>
+                <div class="test-progress-bar">
+                    <div class="test-progress-fill" id="test-fill"></div>
+                </div>
+                <div class="test-topic-label" id="test-topic-lbl"></div>
+                <div class="test-card">
+                    <div class="test-hint">Inglizcha so'zini toping:</div>
+                    <div class="test-word" id="test-word"></div>
+                    <div class="test-timer" id="test-timer"></div>
+                </div>
+                <div class="test-answer-reveal" id="test-answer-reveal"></div>
+                <button class="btn btn-accent btn-show" id="btn-show" onclick="showAnswer()">👁 Javobni ko'rish</button>
+                <div class="test-btns" id="test-ans-btns" style="display: none">
+                    <button class="btn btn-green" onclick="answerQ(true)">✅ Topdim!</button>
+                    <button class="btn btn-red" onclick="answerQ(false)">❌ Topa olmadim</button>
+                </div>
+                <div style="padding: 16px 24px">
+                    <button class="btn btn-ghost" onclick="endTest()">← Orqaga</button>
+                </div>
+            </div>
 
-// ===== WORD CARD =====
-function wordCard(w, idx) {
-  const card = document.createElement('div');
-  card.className = 'word-card';
-  card.innerHTML = `
-    <div class="word-row">
-      <div class="word-uz">${w.uz||'— tarjima yo\'q'}</div>
-      <div class="word-divider"></div>
-      <div class="word-eng">${w.eng}</div>
-      <button class="word-del" title="O'chirish">🗑</button>
-    </div>
-    ${w.date ? '<div class="word-date"><span>'+w.date+'</span></div>' : ''}
-  `;
-  card.querySelector('.word-del').onclick = () => deleteWord(idx);
-  return card;
-}
+            <!-- RESULTS SCREEN -->
+            <div id="results-screen">
+                <div class="header">
+                    <span class="logo">24.WØRD'$</span>
+                    <button class="theme-toggle" onclick="toggleTheme()" id="theme-toggle-res">🌙</button>
+                    <span class="prog-label" id="res-topic-lbl"></span>
+                </div>
+                <div class="results-score-card">
+                    <div class="results-pct" id="res-pct"></div>
+                    <div class="results-stats" id="res-stats"></div>
+                </div>
+                <div class="results-list" id="res-list"></div>
+                <div style="padding: 16px 24px">
+                    <button class="btn btn-accent" style="width: 100%; padding: 12px" onclick="endTest()">← Orqaga</button>
+                </div>
+            </div>
 
-function deleteWord(idx) {
-  const eng = currentTopic.words[idx].eng;
-  if (!confirm('"' + eng + '" so\'zini o\'chirasizmi?')) return;
-  currentTopic.words.splice(idx, 1);
-  saveState();
-  refresh();
-}
+            <!-- LEVEL UP SCREEN -->
+            <div id="levelup-screen">
+                <div class="levelup-title">LEVEL UP</div>
+                <div class="levelup-icon">⚡</div>
+                <div class="levelup-num" id="lu-num"></div>
+                <div class="levelup-badge" id="lu-badge"></div>
+                <br />
+                <button class="btn btn-accent" style="padding: 14px 32px; font-size: 14px" onclick="afterLevelUp()">
+                    🎯 Davom etish
+                </button>
+            </div>
+        </div>
 
-// ===== ADD PANEL =====
-function actionBtn() {
-  const panel = document.getElementById('add-panel');
-  if (panel.classList.contains('open')) { hideAddPanel(); return; }
-  if (currentTopic) openWordPanel();
-  else openTopicPanel();
-}
+        <script>
+            // ===== THEME =====
+            let isLight = localStorage.getItem('24words_theme') === 'light';
 
-function openTopicPanel() {
-  addMode = 'topic';
-  document.getElementById('add-label').textContent = 'Yangi mavzu nomi:';
-  document.getElementById('add-f1').placeholder = 'Masalan: Animals, Food, Travel…';
-  document.getElementById('add-f1').value = '';
-  document.getElementById('add-f2-wrap').style.display = 'none';
-  document.getElementById('add-f2').value = '';
-  document.getElementById('add-save-btn').textContent = '✓ Mavzu yaratish';
-  document.getElementById('add-panel').classList.add('open');
-  document.getElementById('add-f1').focus();
-}
+            function applyTheme() {
+                if (isLight) {
+                    document.body.classList.add('light');
+                } else {
+                    document.body.classList.remove('light');
+                }
+                const icon = isLight ? '☀️' : '🌙';
+                document.querySelectorAll('.theme-toggle').forEach(btn => btn.textContent = icon);
+                localStorage.setItem('24words_theme', isLight ? 'light' : 'dark');
+            }
 
-function openWordPanel() {
-  addMode = 'word';
-  document.getElementById('add-label').textContent = "Yangi so'z qo'shish";
-  document.getElementById('add-f1').placeholder = "Inglizcha so'z…";
-  document.getElementById('add-f1').value = '';
-  document.getElementById('add-f2-wrap').style.display = 'none';
-  document.getElementById('add-f2').value = '';
-  document.getElementById('add-save-btn').textContent = '✓ Saqlash';
-  document.getElementById('add-panel').classList.add('open');
-  document.getElementById('add-f1').focus();
+            function toggleTheme() {
+                isLight = !isLight;
+                applyTheme();
+            }
 
-  document.getElementById('add-f1').onkeydown = (e) => {
-    if (e.key === 'Enter') {
-      const v = document.getElementById('add-f1').value.trim();
-      if (!v) return;
-      document.getElementById('add-f2-wrap').style.display = 'block';
-      document.getElementById('add-f2').focus();
-    }
-  };
-}
+            // Apply on load
+            applyTheme();
 
-function hideAddPanel() {
-  document.getElementById('add-panel').classList.remove('open');
-  addMode = null;
-}
+            // ===== DATA =====
+            const LEVEL_NAMES = ["Beginner","Beginner+","Elementary","Elementary+","Pre-Intermediate","Intermediate","Intermediate+","Upper-Intermediate","Advanced","Advanced+","Proficient","Master","Legend"];
 
-function saveItem() {
-  if (addMode === 'topic') saveTopic();
-  else if (addMode === 'word') saveWord();
-}
+            const PRESET_TOPICS = [{"name":"Animals","words":[{"eng":"cat","uz":"mushuk"},{"eng":"dog","uz":"it"},{"eng":"horse","uz":"ot"},{"eng":"elephant","uz":"fil"},{"eng":"lion","uz":"sher"},{"eng":"tiger","uz":"yo'lbars"},{"eng":"bear","uz":"ayiq"},{"eng":"wolf","uz":"bo'ri"},{"eng":"fox","uz":"tulki"},{"eng":"rabbit","uz":"quyon"},{"eng":"deer","uz":"kiyik"},{"eng":"monkey","uz":"maymun"},{"eng":"giraffe","uz":"jirafa"},{"eng":"zebra","uz":"zebra"},{"eng":"crocodile","uz":"timsoh"},{"eng":"snake","uz":"ilon"},{"eng":"eagle","uz":"burgut"},{"eng":"owl","uz":"boyqush"},{"eng":"parrot","uz":"to'ti"},{"eng":"dolphin","uz":"delfin"},{"eng":"shark","uz":"akula"},{"eng":"penguin","uz":"pingvin"},{"eng":"camel","uz":"tuya"},{"eng":"gorilla","uz":"gorilla"}]},{"name":"Food & Drinks","words":[{"eng":"bread","uz":"non"},{"eng":"rice","uz":"guruch"},{"eng":"meat","uz":"go'sht"},{"eng":"fish","uz":"baliq"},{"eng":"egg","uz":"tuxum"},{"eng":"milk","uz":"sut"},{"eng":"cheese","uz":"pishloq"},{"eng":"butter","uz":"sariyog'"},{"eng":"sugar","uz":"shakar"},{"eng":"salt","uz":"tuz"},{"eng":"pepper","uz":"qalampir"},{"eng":"onion","uz":"piyoz"},{"eng":"garlic","uz":"sarimsoq"},{"eng":"tomato","uz":"pomidor"},{"eng":"potato","uz":"kartoshka"},{"eng":"carrot","uz":"sabzi"},{"eng":"apple","uz":"olma"},{"eng":"orange","uz":"apelsin"},{"eng":"banana","uz":"banan"},{"eng":"grape","uz":"uzum"},{"eng":"watermelon","uz":"tarvuz"},{"eng":"tea","uz":"choy"},{"eng":"coffee","uz":"qahva"},{"eng":"water","uz":"suv"}]},{"name":"Colors","words":[{"eng":"red","uz":"qizil"},{"eng":"blue","uz":"ko'k"},{"eng":"green","uz":"yashil"},{"eng":"yellow","uz":"sariq"},{"eng":"orange","uz":"to'q sariq"},{"eng":"purple","uz":"binafsha"},{"eng":"pink","uz":"pushti"},{"eng":"brown","uz":"jigarrang"},{"eng":"black","uz":"qora"},{"eng":"white","uz":"oq"},{"eng":"gray","uz":"kulrang"},{"eng":"gold","uz":"oltin"},{"eng":"silver","uz":"kumush"},{"eng":"beige","uz":"bej"},{"eng":"navy","uz":"to'q ko'k"},{"eng":"turquoise","uz":"firuza"},{"eng":"maroon","uz":"to'q qizil"},{"eng":"olive","uz":"zaytun rangi"},{"eng":"coral","uz":"marjon rangi"},{"eng":"ivory","uz":"fil suyagi rangi"},{"eng":"crimson","uz":"qirmizi"},{"eng":"indigo","uz":"nil"},{"eng":"violet","uz":"binafsha"},{"eng":"scarlet","uz":"qizg'ish"}]},{"name":"Body Parts","words":[{"eng":"head","uz":"bosh"},{"eng":"eye","uz":"ko'z"},{"eng":"ear","uz":"quloq"},{"eng":"nose","uz":"burun"},{"eng":"mouth","uz":"og'iz"},{"eng":"tooth","uz":"tish"},{"eng":"tongue","uz":"til"},{"eng":"neck","uz":"bo'yin"},{"eng":"shoulder","uz":"yelka"},{"eng":"arm","uz":"qo'l"},{"eng":"elbow","uz":"tirsak"},{"eng":"hand","uz":"qo'l kafti"},{"eng":"finger","uz":"barmoq"},{"eng":"chest","uz":"ko'krak"},{"eng":"stomach","uz":"qorin"},{"eng":"back","uz":"orqa"},{"eng":"leg","uz":"oyoq"},{"eng":"knee","uz":"tizza"},{"eng":"foot","uz":"oyoq kafti"},{"eng":"toe","uz":"oyoq barmog'i"},{"eng":"hair","uz":"soch"},{"eng":"face","uz":"yuz"},{"eng":"lip","uz":"lab"},{"eng":"chin","uz":"iyak"}]},{"name":"Family","words":[{"eng":"mother","uz":"ona"},{"eng":"father","uz":"ota"},{"eng":"brother","uz":"aka/uka"},{"eng":"sister","uz":"opa/singil"},{"eng":"son","uz":"o'g'il"},{"eng":"daughter","uz":"qiz"},{"eng":"grandfather","uz":"buva"},{"eng":"grandmother","uz":"buvi"},{"eng":"uncle","uz":"amaki/tog'a"},{"eng":"aunt","uz":"xola/amma"},{"eng":"cousin","uz":"amakivachcha"},{"eng":"husband","uz":"er"},{"eng":"wife","uz":"xotin"},{"eng":"baby","uz":"chaqaloq"},{"eng":"child","uz":"bola"},{"eng":"parents","uz":"ota-ona"},{"eng":"family","uz":"oila"},{"eng":"relative","uz":"qarindosh"},{"eng":"twin","uz":"egizak"},{"eng":"nephew","uz":"jiyani (o'g'il)"},{"eng":"niece","uz":"jiyani (qiz)"},{"eng":"in-law","uz":"qaynota/qaynona"},{"eng":"stepfather","uz":"o'gay ota"},{"eng":"stepmother","uz":"o'gay ona"}]},{"name":"Numbers & Math","words":[{"eng":"one","uz":"bir"},{"eng":"two","uz":"ikki"},{"eng":"three","uz":"uch"},{"eng":"four","uz":"to'rt"},{"eng":"five","uz":"besh"},{"eng":"ten","uz":"o'n"},{"eng":"twenty","uz":"yigirma"},{"eng":"hundred","uz":"yuz"},{"eng":"thousand","uz":"ming"},{"eng":"million","uz":"million"},{"eng":"zero","uz":"nol"},{"eng":"half","uz":"yarim"},{"eng":"double","uz":"ikki barobar"},{"eng":"add","uz":"qo'shmoq"},{"eng":"subtract","uz":"ayirmoq"},{"eng":"multiply","uz":"ko'paytirmoq"},{"eng":"divide","uz":"bo'lmoq"},{"eng":"equal","uz":"teng"},{"eng":"number","uz":"son"},{"eng":"count","uz":"hisoblash"},{"eng":"plus","uz":"qo'shish"},{"eng":"minus","uz":"minus"},{"eng":"percent","uz":"foiz"},{"eng":"square","uz":"kvadrat"}]},{"name":"Weather","words":[{"eng":"sun","uz":"quyosh"},{"eng":"rain","uz":"yomg'ir"},{"eng":"snow","uz":"qor"},{"eng":"wind","uz":"shamol"},{"eng":"cloud","uz":"bulut"},{"eng":"storm","uz":"bo'ron"},{"eng":"thunder","uz":"momaqaldiroq"},{"eng":"lightning","uz":"chaqmoq"},{"eng":"fog","uz":"tuman"},{"eng":"ice","uz":"muz"},{"eng":"hail","uz":"do'l"},{"eng":"rainbow","uz":"kamalak"},{"eng":"temperature","uz":"harorat"},{"eng":"hot","uz":"issiq"},{"eng":"cold","uz":"sovuq"},{"eng":"warm","uz":"iliq"},{"eng":"humid","uz":"nam"},{"eng":"dry","uz":"quruq"},{"eng":"forecast","uz":"ob-havo bashorati"},{"eng":"season","uz":"fasl"},{"eng":"spring","uz":"bahor"},{"eng":"summer","uz":"yoz"},{"eng":"autumn","uz":"kuz"},{"eng":"winter","uz":"qish"}]},{"name":"Travel","words":[{"eng":"airport","uz":"aeroport"},{"eng":"ticket","uz":"chipta"},{"eng":"passport","uz":"pasport"},{"eng":"hotel","uz":"mehmonxona"},{"eng":"luggage","uz":"bagaj"},{"eng":"flight","uz":"parvoz"},{"eng":"train","uz":"poezd"},{"eng":"bus","uz":"avtobus"},{"eng":"taxi","uz":"taksi"},{"eng":"map","uz":"xarita"},{"eng":"tour","uz":"sayohat"},{"eng":"visa","uz":"viza"},{"eng":"border","uz":"chegara"},{"eng":"customs","uz":"bojxona"},{"eng":"currency","uz":"valyuta"},{"eng":"reservation","uz":"bron"},{"eng":"check-in","uz":"ro'yxatdan o'tish"},{"eng":"destination","uz":"manzil"},{"eng":"departure","uz":"jo'nash"},{"eng":"arrival","uz":"kelish"},{"eng":"souvenir","uz":"sovg'a-esdalik"},{"eng":"guide","uz":"gid"},{"eng":"trip","uz":"safar"},{"eng":"journey","uz":"yo'l"}]},{"name":"Technology","words":[{"eng":"computer","uz":"kompyuter"},{"eng":"phone","uz":"telefon"},{"eng":"internet","uz":"internet"},{"eng":"software","uz":"dastur"},{"eng":"hardware","uz":"uskunalar"},{"eng":"keyboard","uz":"klaviatura"},{"eng":"screen","uz":"ekran"},{"eng":"mouse","uz":"sichqoncha"},{"eng":"battery","uz":"batareya"},{"eng":"charger","uz":"zaryadlovchi"},{"eng":"camera","uz":"kamera"},{"eng":"password","uz":"parol"},{"eng":"download","uz":"yuklab olish"},{"eng":"upload","uz":"yuklash"},{"eng":"website","uz":"veb-sayt"},{"eng":"application","uz":"ilova"},{"eng":"update","uz":"yangilash"},{"eng":"delete","uz":"o'chirish"},{"eng":"search","uz":"qidirish"},{"eng":"message","uz":"xabar"},{"eng":"network","uz":"tarmoq"},{"eng":"wifi","uz":"wi-fi"},{"eng":"bluetooth","uz":"bluetooth"},{"eng":"storage","uz":"xotira"}]},{"name":"School & Education","words":[{"eng":"school","uz":"maktab"},{"eng":"teacher","uz":"o'qituvchi"},{"eng":"student","uz":"o'quvchi"},{"eng":"lesson","uz":"dars"},{"eng":"homework","uz":"uy vazifasi"},{"eng":"exam","uz":"imtihon"},{"eng":"grade","uz":"baho"},{"eng":"class","uz":"sinf"},{"eng":"book","uz":"kitob"},{"eng":"pen","uz":"ruchka"},{"eng":"pencil","uz":"qalam"},{"eng":"notebook","uz":"daftar"},{"eng":"eraser","uz":"o'chirg'ich"},{"eng":"ruler","uz":"chizg'ich"},{"eng":"backpack","uz":"sumka"},{"eng":"library","uz":"kutubxona"},{"eng":"university","uz":"universitet"},{"eng":"diploma","uz":"diplom"},{"eng":"subject","uz":"fan"},{"eng":"knowledge","uz":"bilim"},{"eng":"study","uz":"o'qish"},{"eng":"learn","uz":"o'rganish"},{"eng":"quiz","uz":"viktorina"},{"eng":"certificate","uz":"sertifikat"}]},{"name":"Health & Body","words":[{"eng":"doctor","uz":"shifokor"},{"eng":"hospital","uz":"kasalxona"},{"eng":"medicine","uz":"dori"},{"eng":"pain","uz":"og'riq"},{"eng":"fever","uz":"harorat"},{"eng":"cough","uz":"yo'tal"},{"eng":"cold","uz":"shamollash"},{"eng":"headache","uz":"bosh og'rig'i"},{"eng":"healthy","uz":"sog'lom"},{"eng":"sick","uz":"kasal"},{"eng":"surgery","uz":"operatsiya"},{"eng":"bandage","uz":"bog'lam"},{"eng":"injection","uz":"ukol"},{"eng":"vitamin","uz":"vitamin"},{"eng":"allergy","uz":"allergiya"},{"eng":"blood","uz":"qon"},{"eng":"heart","uz":"yurak"},{"eng":"lung","uz":"o'pka"},{"eng":"bone","uz":"suyak"},{"eng":"muscle","uz":"muskul"},{"eng":"exercise","uz":"mashq"},{"eng":"diet","uz":"parhez"},{"eng":"sleep","uz":"uyqu"},{"eng":"rest","uz":"dam olish"}]},{"name":"Emotions","words":[{"eng":"happy","uz":"xursand"},{"eng":"sad","uz":"xafa"},{"eng":"angry","uz":"g'azablangan"},{"eng":"scared","uz":"qo'rqqan"},{"eng":"surprised","uz":"hayron"},{"eng":"excited","uz":"hayajonlangan"},{"eng":"bored","uz":"zerikkan"},{"eng":"tired","uz":"charchagan"},{"eng":"proud","uz":"mag'rur"},{"eng":"ashamed","uz":"uyalgan"},{"eng":"jealous","uz":"hasad qilgan"},{"eng":"lonely","uz":"yolg'iz"},{"eng":"nervous","uz":"asabiy"},{"eng":"calm","uz":"tinch"},{"eng":"love","uz":"sevgi"},{"eng":"hate","uz":"nafrat"},{"eng":"hope","uz":"umid"},{"eng":"fear","uz":"qo'rquv"},{"eng":"joy","uz":"quvonch"},{"eng":"grief","uz":"qayg'u"},{"eng":"courage","uz":"jasorat"},{"eng":"worry","uz":"tashvish"},{"eng":"relief","uz":"yengillik"},{"eng":"disgust","uz":"jirkanish"}]},{"name":"House & Home","words":[{"eng":"house","uz":"uy"},{"eng":"room","uz":"xona"},{"eng":"kitchen","uz":"oshxona"},{"eng":"bedroom","uz":"yotoqxona"},{"eng":"bathroom","uz":"hammom"},{"eng":"living room","uz":"mehmonxona"},{"eng":"door","uz":"eshik"},{"eng":"window","uz":"deraza"},{"eng":"floor","uz":"pol"},{"eng":"ceiling","uz":"shift"},{"eng":"wall","uz":"devor"},{"eng":"furniture","uz":"mebel"},{"eng":"table","uz":"stol"},{"eng":"chair","uz":"stul"},{"eng":"bed","uz":"karavot"},{"eng":"sofa","uz":"divan"},{"eng":"lamp","uz":"chiroq"},{"eng":"mirror","uz":"oyna"},{"eng":"carpet","uz":"gilam"},{"eng":"curtain","uz":"parda"},{"eng":"stairs","uz":"zinapoya"},{"eng":"roof","uz":"tom"},{"eng":"garage","uz":"garaj"},{"eng":"garden","uz":"bog'"}]},{"name":"Clothes","words":[{"eng":"shirt","uz":"ko'ylak"},{"eng":"trousers","uz":"shim"},{"eng":"dress","uz":"ko'ylak (ayol)"},{"eng":"jacket","uz":"kurtka"},{"eng":"coat","uz":"palto"},{"eng":"shoes","uz":"tufli"},{"eng":"boots","uz":"etik"},{"eng":"socks","uz":"paypoq"},{"eng":"hat","uz":"shapka"},{"eng":"scarf","uz":"sharf"},{"eng":"gloves","uz":"qo'lqop"},{"eng":"belt","uz":"kamar"},{"eng":"tie","uz":"galstuk"},{"eng":"suit","uz":"kostyum"},{"eng":"jeans","uz":"jinsi shim"},{"eng":"sweater","uz":"sviter"},{"eng":"skirt","uz":"yubka"},{"eng":"uniform","uz":"forma"},{"eng":"underwear","uz":"ichki kiyim"},{"eng":"pocket","uz":"cho'ntak"},{"eng":"button","uz":"tugma"},{"eng":"zipper","uz":"zamok"},{"eng":"sleeve","uz":"yeng"},{"eng":"collar","uz":"yoqa"}]},{"name":"Sports","words":[{"eng":"football","uz":"futbol"},{"eng":"basketball","uz":"basketbol"},{"eng":"tennis","uz":"tennis"},{"eng":"swimming","uz":"suzish"},{"eng":"running","uz":"yugurish"},{"eng":"boxing","uz":"boks"},{"eng":"volleyball","uz":"voleybol"},{"eng":"cycling","uz":"velosiped sporti"},{"eng":"gymnastics","uz":"gimnastika"},{"eng":"wrestling","uz":"kurash"},{"eng":"team","uz":"jamoa"},{"eng":"player","uz":"o'yinchi"},{"eng":"coach","uz":"murabbiy"},{"eng":"stadium","uz":"stadion"},{"eng":"goal","uz":"gol"},{"eng":"score","uz":"hisob"},{"eng":"champion","uz":"chempion"},{"eng":"medal","uz":"medal"},{"eng":"tournament","uz":"turnir"},{"eng":"match","uz":"o'yin"},{"eng":"win","uz":"g'alaba"},{"eng":"lose","uz":"mag'lubiyat"},{"eng":"draw","uz":"durrang"},{"eng":"referee","uz":"hakam"}]},{"name":"Nature","words":[{"eng":"mountain","uz":"tog'"},{"eng":"river","uz":"daryo"},{"eng":"sea","uz":"dengiz"},{"eng":"ocean","uz":"okean"},{"eng":"forest","uz":"o'rmon"},{"eng":"desert","uz":"cho'l"},{"eng":"island","uz":"orol"},{"eng":"valley","uz":"vodiy"},{"eng":"cliff","uz":"qoya"},{"eng":"waterfall","uz":"sharsara"},{"eng":"lake","uz":"ko'l"},{"eng":"grass","uz":"o't"},{"eng":"tree","uz":"daraxt"},{"eng":"flower","uz":"gul"},{"eng":"leaf","uz":"barg"},{"eng":"root","uz":"ildiz"},{"eng":"rock","uz":"tosh"},{"eng":"sand","uz":"qum"},{"eng":"soil","uz":"tuproq"},{"eng":"sky","uz":"osmon"},{"eng":"star","uz":"yulduz"},{"eng":"moon","uz":"oy"},{"eng":"sun","uz":"quyosh"},{"eng":"earth","uz":"yer"}]},{"name":"Professions","words":[{"eng":"doctor","uz":"shifokor"},{"eng":"teacher","uz":"o'qituvchi"},{"eng":"engineer","uz":"muhandis"},{"eng":"lawyer","uz":"advokat"},{"eng":"pilot","uz":"uchuvchi"},{"eng":"chef","uz":"oshpaz"},{"eng":"driver","uz":"haydovchi"},{"eng":"farmer","uz":"dehqon"},{"eng":"soldier","uz":"askar"},{"eng":"police","uz":"politsiyachi"},{"eng":"firefighter","uz":"o't o'chiruvchi"},{"eng":"nurse","uz":"hamshira"},{"eng":"architect","uz":"me'mor"},{"eng":"journalist","uz":"jurnalist"},{"eng":"artist","uz":"rassom"},{"eng":"musician","uz":"musiqachi"},{"eng":"actor","uz":"aktyor"},{"eng":"writer","uz":"yozuvchi"},{"eng":"scientist","uz":"olim"},{"eng":"programmer","uz":"dasturchi"},{"eng":"dentist","uz":"tish shifokori"},{"eng":"pharmacist","uz":"dorixonachi"},{"eng":"accountant","uz":"buxgalter"},{"eng":"electrician","uz":"elektrchi"}]},{"name":"City & Places","words":[{"eng":"city","uz":"shahar"},{"eng":"street","uz":"ko'cha"},{"eng":"square","uz":"maydon"},{"eng":"park","uz":"bog'"},{"eng":"market","uz":"bozor"},{"eng":"shop","uz":"do'kon"},{"eng":"bank","uz":"bank"},{"eng":"mosque","uz":"masjid"},{"eng":"church","uz":"cherkov"},{"eng":"museum","uz":"muzey"},{"eng":"theater","uz":"teatr"},{"eng":"cinema","uz":"kino"},{"eng":"restaurant","uz":"restoran"},{"eng":"cafe","uz":"kafe"},{"eng":"pharmacy","uz":"dorixona"},{"eng":"post office","uz":"pochta"},{"eng":"police station","uz":"politsiya"},{"eng":"school","uz":"maktab"},{"eng":"hospital","uz":"kasalxona"},{"eng":"bridge","uz":"ko'prik"},{"eng":"road","uz":"yo'l"},{"eng":"traffic","uz":"transport harakati"},{"eng":"crossroad","uz":"chorraxa"},{"eng":"neighborhood","uz":"mahalla"}]},{"name":"Time & Calendar","words":[{"eng":"second","uz":"soniya"},{"eng":"minute","uz":"daqiqa"},{"eng":"hour","uz":"soat"},{"eng":"day","uz":"kun"},{"eng":"week","uz":"hafta"},{"eng":"month","uz":"oy"},{"eng":"year","uz":"yil"},{"eng":"today","uz":"bugun"},{"eng":"yesterday","uz":"kecha"},{"eng":"tomorrow","uz":"ertaga"},{"eng":"morning","uz":"ertalab"},{"eng":"afternoon","uz":"tushdan keyin"},{"eng":"evening","uz":"kechqurun"},{"eng":"night","uz":"kecha"},{"eng":"midnight","uz":"yarim kecha"},{"eng":"Monday","uz":"dushanba"},{"eng":"Friday","uz":"juma"},{"eng":"weekend","uz":"dam olish kuni"},{"eng":"holiday","uz":"bayram"},{"eng":"birthday","uz":"tug'ilgan kun"},{"eng":"century","uz":"asr"},{"eng":"decade","uz":"o'n yillik"},{"eng":"past","uz":"o'tmish"},{"eng":"future","uz":"kelajak"}]},{"name":"Verbs – Action","words":[{"eng":"run","uz":"yugurmoq"},{"eng":"walk","uz":"yurmoq"},{"eng":"jump","uz":"sakramoq"},{"eng":"sit","uz":"o'tirmoq"},{"eng":"stand","uz":"turmoq"},{"eng":"eat","uz":"yemoq"},{"eng":"drink","uz":"ichmoq"},{"eng":"sleep","uz":"uxlamoq"},{"eng":"wake up","uz":"uyg'onmoq"},{"eng":"write","uz":"yozmoq"},{"eng":"read","uz":"o'qimoq"},{"eng":"speak","uz":"gapirmoq"},{"eng":"listen","uz":"tinglash"},{"eng":"watch","uz":"tomosha qilmoq"},{"eng":"cook","uz":"pishirmoq"},{"eng":"clean","uz":"tozalamoq"},{"eng":"build","uz":"qurmoq"},{"eng":"open","uz":"ochmoq"},{"eng":"close","uz":"yopmoq"},{"eng":"buy","uz":"sotib olmoq"},{"eng":"sell","uz":"sotmoq"},{"eng":"give","uz":"bermoq"},{"eng":"take","uz":"olmoq"},{"eng":"throw","uz":"otmoq"}]},{"name":"Adjectives","words":[{"eng":"big","uz":"katta"},{"eng":"small","uz":"kichik"},{"eng":"tall","uz":"baland"},{"eng":"short","uz":"past"},{"eng":"long","uz":"uzun"},{"eng":"wide","uz":"keng"},{"eng":"narrow","uz":"tor"},{"eng":"heavy","uz":"og'ir"},{"eng":"light","uz":"yengil"},{"eng":"fast","uz":"tez"},{"eng":"slow","uz":"sekin"},{"eng":"new","uz":"yangi"},{"eng":"old","uz":"eski"},{"eng":"young","uz":"yosh"},{"eng":"beautiful","uz":"chiroyli"},{"eng":"ugly","uz":"xunuk"},{"eng":"clean","uz":"toza"},{"eng":"dirty","uz":"iflos"},{"eng":"hard","uz":"qattiq"},{"eng":"soft","uz":"yumshoq"},{"eng":"rich","uz":"boy"},{"eng":"poor","uz":"kambag'al"},{"eng":"strong","uz":"kuchli"},{"eng":"weak","uz":"kuchsiz"}]},{"name":"Science","words":[{"eng":"atom","uz":"atom"},{"eng":"molecule","uz":"molekula"},{"eng":"energy","uz":"energiya"},{"eng":"force","uz":"kuch"},{"eng":"gravity","uz":"tortishish"},{"eng":"electricity","uz":"elektr"},{"eng":"magnet","uz":"magnit"},{"eng":"chemical","uz":"kimyoviy"},{"eng":"reaction","uz":"reaktsiya"},{"eng":"element","uz":"element"},{"eng":"experiment","uz":"tajriba"},{"eng":"laboratory","uz":"laboratoriya"},{"eng":"microscope","uz":"mikroskop"},{"eng":"telescope","uz":"teleskop"},{"eng":"theory","uz":"nazariya"},{"eng":"hypothesis","uz":"gipoteza"},{"eng":"evidence","uz":"dalil"},{"eng":"biology","uz":"biologiya"},{"eng":"physics","uz":"fizika"},{"eng":"chemistry","uz":"kimyo"},{"eng":"astronomy","uz":"astronomiya"},{"eng":"geology","uz":"geologiya"},{"eng":"evolution","uz":"evolyutsiya"},{"eng":"cell","uz":"hujayra"}]},{"name":"Business","words":[{"eng":"money","uz":"pul"},{"eng":"price","uz":"narx"},{"eng":"profit","uz":"foyda"},{"eng":"loss","uz":"zarar"},{"eng":"budget","uz":"byudjet"},{"eng":"salary","uz":"maosh"},{"eng":"tax","uz":"soliq"},{"eng":"investment","uz":"investitsiya"},{"eng":"company","uz":"kompaniya"},{"eng":"contract","uz":"shartnoma"},{"eng":"client","uz":"mijoz"},{"eng":"product","uz":"mahsulot"},{"eng":"service","uz":"xizmat"},{"eng":"market","uz":"bozor"},{"eng":"brand","uz":"brend"},{"eng":"advertisement","uz":"reklama"},{"eng":"discount","uz":"chegirma"},{"eng":"invoice","uz":"hisob-faktura"},{"eng":"deadline","uz":"muddat"},{"eng":"meeting","uz":"uchrashuv"},{"eng":"manager","uz":"menejer"},{"eng":"employee","uz":"xodim"},{"eng":"boss","uz":"xo'jayin"},{"eng":"office","uz":"ofis"}]},{"name":"Prepositions & Grammar","words":[{"eng":"in","uz":"ichida"},{"eng":"on","uz":"ustida"},{"eng":"under","uz":"ostida"},{"eng":"above","uz":"yuqorida"},{"eng":"below","uz":"quyida"},{"eng":"between","uz":"orasida"},{"eng":"beside","uz":"yonida"},{"eng":"behind","uz":"orqasida"},{"eng":"in front of","uz":"oldida"},{"eng":"near","uz":"yaqinida"},{"eng":"far","uz":"uzoqda"},{"eng":"through","uz":"orqali"},{"eng":"along","uz":"bo'ylab"},{"eng":"across","uz":"narigi tomonda"},{"eng":"against","uz":"qarshi"},{"eng":"without","uz":"siz"},{"eng":"with","uz":"bilan"},{"eng":"by","uz":"tomonidan"},{"eng":"for","uz":"uchun"},{"eng":"from","uz":"dan"},{"eng":"to","uz":"ga"},{"eng":"into","uz":"ichiga"},{"eng":"out of","uz":"tashqariga"},{"eng":"toward","uz":"tomon"}]},{"name":"Phrases & Greetings","words":[{"eng":"hello","uz":"salom"},{"eng":"goodbye","uz":"xayr"},{"eng":"please","uz":"iltimos"},{"eng":"thank you","uz":"rahmat"},{"eng":"sorry","uz":"kechirasiz"},{"eng":"excuse me","uz":"uzr"},{"eng":"yes","uz":"ha"},{"eng":"no","uz":"yo'q"},{"eng":"maybe","uz":"balki"},{"eng":"of course","uz":"albatta"},{"eng":"good morning","uz":"xayrli tong"},{"eng":"good night","uz":"xayrli tun"},{"eng":"how are you","uz":"yaxshimisiz"},{"eng":"I'm fine","uz":"yaxshiman"},{"eng":"nice to meet you","uz":"tanishganimdan xursandman"},{"eng":"congratulations","uz":"tabriklayman"},{"eng":"well done","uz":"barakalla"},{"eng":"never mind","uz":"mayli"},{"eng":"be careful","uz":"ehtiyot bo'ling"},{"eng":"good luck","uz":"omad"},{"eng":"happy birthday","uz":"tug'ilgan kuningiz bilan"},{"eng":"welcome","uz":"xush kelibsiz"},{"eng":"help me","uz":"yordam bering"},{"eng":"I don't know","uz":"bilmayman"}]}];
 
-function saveTopic() {
-  const name = document.getElementById('add-f1').value.trim();
-  if (!name) { alert("Mavzu nomini kiriting!"); return; }
-  const topic = { name, words: [], date: new Date().toLocaleDateString('uz-UZ', {day:'2-digit',month:'2-digit',year:'numeric'}).replace(/\//g,'.') };
-  state.topics.unshift(topic);
-  saveState();
-  hideAddPanel();
-  refresh();
-}
+            // STATE
+            let state = loadState();
+            let currentTopic = null;
+            let isPresetsMode = false;
+            let currentPreset = null;
+            let addMode = null;
 
-function saveWord() {
-  const eng = document.getElementById('add-f1').value.trim();
-  const uz = document.getElementById('add-f2').value.trim();
-  if (!eng) { alert("Inglizcha so'zni kiriting!"); return; }
-  const word = { eng, uz, date: new Date().toLocaleDateString('uz-UZ', {day:'2-digit',month:'2-digit',year:'numeric'}).replace(/\//g,'.') };
-  currentTopic.words.unshift(word);
-  saveState();
-  hideAddPanel();
-  refresh();
-}
+            // TEST STATE
+            let testWords = [], testQueue = [], testIdx = 0, testResults = [];
+            let testStartTime = 0, testTimerInterval = null;
+            let testTopicName = "", testIsPreset = false, testPresetName = "";
+            let afterTestFn = null;
 
-// ===== PRESETS =====
-function openPresets() {
-  isPresetsMode = true;
-  currentPreset = null;
-  document.getElementById('presets-btn').style.display = 'none';
-  document.getElementById('action-btn').textContent = '';
-  hideAddPanel();
-  updateBread();
-  document.getElementById('search-input').value = '';
-  refresh();
-}
+            function loadState() {
+                try {
+                    const raw = localStorage.getItem("24words_state");
+                    if (raw) {
+                        const d = JSON.parse(raw);
+                        if (!d.level) d.level = 1;
+                        if (!d.exp) d.exp = 0;
+                        if (!d.completed_topics) d.completed_topics = [];
+                        if (!d.completed_preset_topics) d.completed_preset_topics = [];
+                        return d;
+                    }
+                } catch (e) {}
+                return { topics: [], level: 1, exp: 0, completed_topics: [], completed_preset_topics: [] };
+            }
 
-// ===== TEST =====
-function startTest() {
-  let words, topicName, isPreset, presetName;
+            function saveState() {
+                localStorage.setItem("24words_state", JSON.stringify(state));
+            }
 
-  if (isPresetsMode && currentPreset) {
-    words = currentPreset.words;
-    topicName = currentPreset.name;
-    isPreset = true;
-    presetName = currentPreset.name;
-    afterTestFn = () => { currentPreset = null; openPresets(); };
-  } else if (currentTopic) {
-    words = currentTopic.words;
-    topicName = currentTopic.name;
-    isPreset = false;
-    presetName = '';
-    afterTestFn = () => { openTopic(currentTopic); };
-  } else return;
+            function updateStatsDisplay() {
+                document.getElementById("lv-badge").textContent = "Lv." + state.level;
+                document.getElementById("exp-label").textContent = state.exp + " EXP";
+            }
 
-  if (words.length < 2) { alert("Kamida 2 ta so'z kerak!"); return; }
+            function showScreen(id) {
+                ["main-screen","test-screen","results-screen","levelup-screen"].forEach((s) => {
+                    document.getElementById(s).style.display = s === id ? "block" : "none";
+                });
+            }
 
-  testWords = words;
-  testTopicName = topicName;
-  testIsPreset = isPreset;
-  testPresetName = presetName;
-  testQueue = shuffle([...words]);
-  testIdx = 0;
-  testResults = [];
+            function goHome() {
+                currentTopic = null;
+                isPresetsMode = false;
+                currentPreset = null;
+                hideAddPanel();
+                updateBread();
+                document.getElementById("presets-btn").style.display = "";
+                document.getElementById("action-btn").textContent = "＋ Yangi mavzu";
+                document.getElementById("test-btn").style.display = "none";
+                document.getElementById("search-input").value = "";
+                updateStatsDisplay();
+                refresh();
+            }
 
-  showScreen('test-screen');
-  document.getElementById('test-topic-lbl').textContent = '📂 ' + topicName;
-  nextQuestion();
-}
+            function updateBread() {
+                const bread = document.getElementById("bread");
+                if (currentTopic || isPresetsMode) {
+                    bread.innerHTML = '<a onclick="goHome()">← Orqaga</a>';
+                    if (currentPreset) {
+                        bread.innerHTML += ' &nbsp; <a onclick="openPresets()">' + currentPreset.name + "</a>";
+                    }
+                } else {
+                    bread.innerHTML = "";
+                }
+            }
 
-function endTest() {
-  stopTimer();
-  if (afterTestFn) afterTestFn();
-  showScreen('main-screen');
-}
+            function refresh() {
+                const list = document.getElementById("list");
+                const q = document.getElementById("search-input").value.trim().toLowerCase();
+                list.innerHTML = "";
+                if (isPresetsMode) { renderPresets(list, q); return; }
+                if (currentTopic) { renderWords(list, q); return; }
+                renderTopics(list, q);
+            }
 
-function nextQuestion() {
-  if (testIdx >= testQueue.length) { showResults(); return; }
-  const word = testQueue[testIdx];
-  document.getElementById('test-prog').textContent = (testIdx+1) + ' / ' + testQueue.length;
-  document.getElementById('test-fill').style.width = (testIdx / testQueue.length * 100) + '%';
-  document.getElementById('test-word').textContent = word.uz || word.eng;
-  document.getElementById('test-timer').textContent = '';
-  document.getElementById('test-timer').className = 'test-timer';
-  document.getElementById('test-answer-reveal').textContent = '';
-  document.getElementById('btn-show').style.display = 'block';
-  document.getElementById('test-ans-btns').style.display = 'none';
-  testStartTime = Date.now();
-  startTimer();
-}
+            function renderTopics(list, q) {
+                const topics = q ? state.topics.filter((t) => t.name.toLowerCase().includes(q)) : state.topics;
+                const total = topics.reduce((s, t) => s + t.words.length, 0);
+                document.getElementById("count-label").textContent = topics.length + " mavzu  ·  " + total + " so'z";
+                document.getElementById("test-btn").style.display = "none";
+                if (!topics.length) { list.innerHTML = '<div class="empty">Mavzu yo\'q.  ＋ tugmasi bosing</div>'; return; }
+                topics.forEach((t) => list.appendChild(topicCard(t)));
+            }
 
-function startTimer() {
-  stopTimer();
-  testTimerInterval = setInterval(() => {
-    const el = Math.floor((Date.now() - testStartTime) / 1000);
-    const el_lbl = document.getElementById('test-timer');
-    el_lbl.textContent = '⏱  ' + el + 's';
-    el_lbl.className = 'test-timer' + (el > 30 ? ' hard' : '');
-  }, 500);
-}
+            function renderWords(list, q) {
+                const words = currentTopic.words;
+                const filtered = q ? words.filter((w) => w.eng.toLowerCase().includes(q) || (w.uz || "").toLowerCase().includes(q)) : words;
+                document.getElementById("count-label").textContent = filtered.length + " so'z" + (q ? "  (jami " + words.length + ")" : "");
+                document.getElementById("test-btn").style.display = "";
+                if (!filtered.length) { list.innerHTML = "<div class=\"empty\">So'z yo'q</div>"; return; }
+                filtered.forEach((w) => { const ri = words.indexOf(w); list.appendChild(wordCard(w, ri)); });
+            }
 
-function stopTimer() {
-  if (testTimerInterval) { clearInterval(testTimerInterval); testTimerInterval = null; }
-}
+            function renderPresets(list, q) {
+                document.getElementById("test-btn").style.display = "none";
+                document.getElementById("count-label").textContent = PRESET_TOPICS.length + " tayyor mavzu";
+                if (currentPreset) { renderPresetWords(list, currentPreset); return; }
+                const filtered = q ? PRESET_TOPICS.filter((p) => p.name.toLowerCase().includes(q)) : PRESET_TOPICS;
+                if (!filtered.length) { list.innerHTML = '<div class="empty">Topilmadi</div>'; return; }
+                filtered.forEach((pt) => {
+                    const card = document.createElement("div");
+                    card.className = "topic-card";
+                    const preview = pt.words.slice(0, 4).map((w) => w.eng).join("  ·  ") + "  ...";
+                    card.innerHTML = `<div class="topic-bar"></div><div class="topic-body"><div class="topic-name">${pt.name}</div><div class="topic-meta">${preview}</div></div><div style="display:flex;align-items:center;padding:0 16px;color:var(--accent);font-size:13px;font-weight:700">${pt.words.length} so'z  ›</div>`;
+                    card.onclick = () => { currentPreset = pt; updateBread(); refresh(); };
+                    list.appendChild(card);
+                });
+            }
 
-function showAnswer() {
-  if (document.getElementById('test-ans-btns').style.display !== 'none') return;
-  const word = testQueue[testIdx];
-  document.getElementById('test-answer-reveal').textContent = 'Inglizcha:  ' + word.eng;
-  document.getElementById('btn-show').style.display = 'none';
-  document.getElementById('test-ans-btns').style.display = 'flex';
-}
+            function renderPresetWords(list, pt) {
+                document.getElementById("test-btn").style.display = "";
+                document.getElementById("count-label").textContent = pt.words.length + " so'z";
+                pt.words.forEach((w, i) => {
+                    const row = document.createElement("div");
+                    row.className = "word-card";
+                    row.innerHTML = `<div class="word-row"><div style="width:36px;display:flex;align-items:center;justify-content:center;color:var(--subtext);font-size:11px;padding-left:8px">${i + 1}.</div><div class="word-uz">${w.uz || ""}</div><div class="word-divider"></div><div class="word-eng">${w.eng}</div></div>`;
+                    list.appendChild(row);
+                });
+            }
 
-function answerQ(correct) {
-  stopTimer();
-  const el = (Date.now() - testStartTime) / 1000;
-  const word = testQueue[testIdx];
-  if (correct) {
-    state.exp = (state.exp || 0) + 24;
-    saveState();
-  }
-  testResults.push({ eng: word.eng, uz: word.uz||'', correct, seconds: Math.round(el * 10) / 10, hard: el > 30 });
-  testIdx++;
-  nextQuestion();
-}
+            function topicCard(t) {
+                const card = document.createElement("div");
+                card.className = "topic-card";
+                card.innerHTML = `<div class="topic-bar"></div><div class="topic-body"><div class="topic-name">${t.name}</div><div class="topic-meta">${t.words.length} ta so'z  ·  ${t.date || ""}</div></div><button class="topic-del" title="O'chirish">🗑</button>`;
+                card.querySelector(".topic-body").onclick = () => openTopic(t);
+                card.querySelector(".topic-name").onclick = () => openTopic(t);
+                card.querySelector(".topic-del").onclick = (e) => { e.stopPropagation(); deleteTopic(t); };
+                return card;
+            }
 
-function showResults() {
-  stopTimer();
-  const total = testResults.length;
-  const nOk = testResults.filter(r => r.correct).length;
-  const pct = total ? Math.round(nOk / total * 100) : 0;
+            function openTopic(t) {
+                currentTopic = t;
+                document.getElementById("action-btn").textContent = "＋ Yangi so'z";
+                document.getElementById("presets-btn").style.display = "none";
+                hideAddPanel();
+                updateBread();
+                refresh();
+            }
 
-  // Level up check
-  let canLevelUp = false;
-  if (pct === 100 && total >= 15) {
-    if (!testIsPreset) {
-      const topicKey = 'topic_' + testTopicName + '_' + (currentTopic ? currentTopic.date : '');
-      if (!state.completed_topics.includes(topicKey)) {
-        canLevelUp = true;
-        state.completed_topics.push(topicKey);
-        saveState();
-      }
-    } else {
-      if (!state.completed_preset_topics.includes(testPresetName)) {
-        canLevelUp = true;
-        state.completed_preset_topics.push(testPresetName);
-        saveState();
-      }
-    }
-  }
+            function deleteTopic(t) {
+                if (!confirm('"' + t.name + "\" mavzusini o'chirasizmi?")) return;
+                state.topics = state.topics.filter((x) => x !== t);
+                saveState();
+                refresh();
+            }
 
-  if (canLevelUp) {
-    state.level = (state.level || 1) + 1;
-    saveState();
-    showLevelUp();
-    return;
-  }
+            function wordCard(w, idx) {
+                const card = document.createElement("div");
+                card.className = "word-card";
+                card.innerHTML = `<div class="word-row"><div class="word-uz">${w.uz || "— tarjima yo'q"}</div><div class="word-divider"></div><div class="word-eng">${w.eng}</div><button class="word-del" title="O'chirish">🗑</button></div>${w.date ? '<div class="word-date"><span>' + w.date + "</span></div>" : ""}`;
+                card.querySelector(".word-del").onclick = () => deleteWord(idx);
+                return card;
+            }
 
-  showScreen('results-screen');
-  document.getElementById('res-topic-lbl').textContent = '📊 Natijalar — ' + testTopicName;
+            function deleteWord(idx) {
+                const eng = currentTopic.words[idx].eng;
+                if (!confirm('"' + eng + "\" so'zini o'chirasizmi?")) return;
+                currentTopic.words.splice(idx, 1);
+                saveState();
+                refresh();
+            }
 
-  const pctEl = document.getElementById('res-pct');
-  pctEl.textContent = pct + '%';
-  pctEl.style.color = pct >= 70 ? 'var(--green)' : pct >= 40 ? 'var(--yellow)' : 'var(--red)';
+            function actionBtn() {
+                const panel = document.getElementById("add-panel");
+                if (panel.classList.contains("open")) { hideAddPanel(); return; }
+                if (currentTopic) openWordPanel();
+                else openTopicPanel();
+            }
 
-  const totalSec = testResults.reduce((s, r) => s + r.seconds, 0);
-  document.getElementById('res-stats').innerHTML = `
-    <span style="color:var(--green)">✅ ${nOk} to'g'ri</span>
-    <span style="color:var(--red)">❌ ${total - nOk} noto'g'ri</span>
-    <span style="color:var(--subtext)">⏱ ${Math.round(totalSec)}s jami vaqt</span>
-    <span style="color:var(--accent)">⚡ ${state.exp} EXP jami</span>
-  `;
+            function openTopicPanel() {
+                addMode = "topic";
+                document.getElementById("add-label").textContent = "Yangi mavzu nomi:";
+                document.getElementById("add-f1").placeholder = "Masalan: Animals, Food, Travel…";
+                document.getElementById("add-f1").value = "";
+                document.getElementById("add-f2-wrap").style.display = "none";
+                document.getElementById("add-f2").value = "";
+                document.getElementById("add-save-btn").textContent = "✓ Mavzu yaratish";
+                document.getElementById("add-panel").classList.add("open");
+                document.getElementById("add-f1").focus();
+            }
 
-  const resList = document.getElementById('res-list');
-  resList.innerHTML = '';
-  const correct = testResults.filter(r => r.correct && !r.hard);
-  const hard = testResults.filter(r => r.hard);
-  const wrong = testResults.filter(r => !r.correct);
+            function openWordPanel() {
+                addMode = "word";
+                document.getElementById("add-label").textContent = "Yangi so'z qo'shish";
+                document.getElementById("add-f1").placeholder = "Inglizcha so'z…";
+                document.getElementById("add-f1").value = "";
+                document.getElementById("add-f2-wrap").style.display = "none";
+                document.getElementById("add-f2").value = "";
+                document.getElementById("add-save-btn").textContent = "✓ Saqlash";
+                document.getElementById("add-panel").classList.add("open");
+                document.getElementById("add-f1").focus();
+                document.getElementById("add-f1").onkeydown = (e) => {
+                    if (e.key === "Enter") {
+                        const v = document.getElementById("add-f1").value.trim();
+                        if (!v) return;
+                        document.getElementById("add-f2-wrap").style.display = "block";
+                        document.getElementById("add-f2").focus();
+                    }
+                };
+            }
 
-  function section(title, items, fg, bg) {
-    if (!items.length) return;
-    const t = document.createElement('div');
-    t.className = 'results-section-title';
-    t.style.color = fg;
-    t.textContent = title;
-    resList.appendChild(t);
-    items.forEach(r => {
-      const row = document.createElement('div');
-      row.className = 'results-row';
-      row.style.background = bg;
-      row.innerHTML = `<span class="results-row-left" style="color:var(--text)">${r.uz || r.eng}</span><span class="results-row-right">${r.eng}  ⏱${r.seconds}s</span>`;
-      resList.appendChild(row);
-    });
-  }
-  section("✅ To'g'ri topganlar", correct, 'var(--green)', 'var(--green-bg)');
-  section("⚠️ Qiyin (30s+)", hard, 'var(--yellow)', 'var(--yellow-bg)');
-  section("☠️ Topa olmaganlar", wrong, 'var(--red)', 'var(--red-bg)');
-}
+            function hideAddPanel() {
+                document.getElementById("add-panel").classList.remove("open");
+                addMode = null;
+            }
 
-function showLevelUp() {
-  const levelNames = ["Beginner","Beginner+","Elementary","Elementary+","Pre-Intermediate","Intermediate","Intermediate+","Upper-Intermediate","Advanced","Advanced+","Proficient","Master","Legend"];
-  const lv = state.level;
-  const name = levelNames[Math.min(lv - 1, levelNames.length - 1)];
-  document.getElementById('lu-num').textContent = 'Level ' + lv;
-  document.getElementById('lu-badge').textContent = name;
-  showScreen('levelup-screen');
-}
+            function saveItem() {
+                if (addMode === "topic") saveTopic();
+                else if (addMode === "word") saveWord();
+            }
 
-function afterLevelUp() {
-  updateStatsDisplay();
-  endTest();
-  showScreen('main-screen');
-}
+            function saveTopic() {
+                const name = document.getElementById("add-f1").value.trim();
+                if (!name) { alert("Mavzu nomini kiriting!"); return; }
+                const topic = { name, words: [], date: new Date().toLocaleDateString("uz-UZ", { day: "2-digit", month: "2-digit", year: "numeric" }).replace(/\//g, ".") };
+                state.topics.unshift(topic);
+                saveState();
+                hideAddPanel();
+                refresh();
+            }
 
-// ===== UTILS =====
-function shuffle(arr) {
-  for (let i = arr.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [arr[i], arr[j]] = [arr[j], arr[i]];
-  }
-  return arr;
-}
+            function saveWord() {
+                const eng = document.getElementById("add-f1").value.trim();
+                const uz = document.getElementById("add-f2").value.trim();
+                if (!eng) { alert("Inglizcha so'zni kiriting!"); return; }
+                const word = { eng, uz, date: new Date().toLocaleDateString("uz-UZ", { day: "2-digit", month: "2-digit", year: "numeric" }).replace(/\//g, ".") };
+                currentTopic.words.unshift(word);
+                saveState();
+                hideAddPanel();
+                refresh();
+            }
 
-// Keyboard
-document.addEventListener('keydown', e => {
-  if (document.activeElement && document.activeElement.tagName === 'INPUT') return;
-  const ts = document.getElementById('test-screen');
-  if (ts.style.display !== 'none') {
-    if (e.code === 'Space' || e.code === 'Enter') { e.preventDefault(); showAnswer(); }
-  }
-});
+            function openPresets() {
+                isPresetsMode = true;
+                currentPreset = null;
+                document.getElementById("presets-btn").style.display = "none";
+                document.getElementById("action-btn").textContent = "";
+                hideAddPanel();
+                updateBread();
+                document.getElementById("search-input").value = "";
+                refresh();
+            }
 
-// INIT
-showScreen('main-screen');
-updateStatsDisplay();
-refresh();
-</script>
-</body>
+            function startTest() {
+                let words, topicName, isPreset, presetName;
+                if (isPresetsMode && currentPreset) {
+                    words = currentPreset.words; topicName = currentPreset.name;
+                    isPreset = true; presetName = currentPreset.name;
+                    afterTestFn = () => { currentPreset = null; openPresets(); };
+                } else if (currentTopic) {
+                    words = currentTopic.words; topicName = currentTopic.name;
+                    isPreset = false; presetName = "";
+                    afterTestFn = () => { openTopic(currentTopic); };
+                } else return;
+                if (words.length < 2) { alert("Kamida 2 ta so'z kerak!"); return; }
+                testWords = words; testTopicName = topicName;
+                testIsPreset = isPreset; testPresetName = presetName;
+                testQueue = shuffle([...words]); testIdx = 0; testResults = [];
+                showScreen("test-screen");
+                document.getElementById("test-topic-lbl").textContent = "📂 " + topicName;
+                nextQuestion();
+            }
+
+            function endTest() {
+                stopTimer();
+                if (afterTestFn) afterTestFn();
+                showScreen("main-screen");
+            }
+
+            function nextQuestion() {
+                if (testIdx >= testQueue.length) { showResults(); return; }
+                const word = testQueue[testIdx];
+                document.getElementById("test-prog").textContent = testIdx + 1 + " / " + testQueue.length;
+                document.getElementById("test-fill").style.width = (testIdx / testQueue.length) * 100 + "%";
+                document.getElementById("test-word").textContent = word.uz || word.eng;
+                document.getElementById("test-timer").textContent = "";
+                document.getElementById("test-timer").className = "test-timer";
+                document.getElementById("test-answer-reveal").textContent = "";
+                document.getElementById("btn-show").style.display = "block";
+                document.getElementById("test-ans-btns").style.display = "none";
+                testStartTime = Date.now();
+                startTimer();
+            }
+
+            function startTimer() {
+                stopTimer();
+                testTimerInterval = setInterval(() => {
+                    const el = Math.floor((Date.now() - testStartTime) / 1000);
+                    const el_lbl = document.getElementById("test-timer");
+                    el_lbl.textContent = "⏱  " + el + "s";
+                    el_lbl.className = "test-timer" + (el > 30 ? " hard" : "");
+                }, 500);
+            }
+
+            function stopTimer() {
+                if (testTimerInterval) { clearInterval(testTimerInterval); testTimerInterval = null; }
+            }
+
+            function showAnswer() {
+                if (document.getElementById("test-ans-btns").style.display !== "none") return;
+                const word = testQueue[testIdx];
+                document.getElementById("test-answer-reveal").textContent = "Inglizcha:  " + word.eng;
+                document.getElementById("btn-show").style.display = "none";
+                document.getElementById("test-ans-btns").style.display = "flex";
+            }
+
+            function answerQ(correct) {
+                stopTimer();
+                const el = (Date.now() - testStartTime) / 1000;
+                const word = testQueue[testIdx];
+                if (correct) { state.exp = (state.exp || 0) + 24; saveState(); }
+                testResults.push({ eng: word.eng, uz: word.uz || "", correct, seconds: Math.round(el * 10) / 10, hard: el > 30 });
+                testIdx++;
+                nextQuestion();
+            }
+
+            function showResults() {
+                stopTimer();
+                const total = testResults.length;
+                const nOk = testResults.filter((r) => r.correct).length;
+                const pct = total ? Math.round((nOk / total) * 100) : 0;
+                let canLevelUp = false;
+                if (pct === 100 && total >= 15) {
+                    if (!testIsPreset) {
+                        const topicKey = "topic_" + testTopicName + "_" + (currentTopic ? currentTopic.date : "");
+                        if (!state.completed_topics.includes(topicKey)) { canLevelUp = true; state.completed_topics.push(topicKey); saveState(); }
+                    } else {
+                        if (!state.completed_preset_topics.includes(testPresetName)) { canLevelUp = true; state.completed_preset_topics.push(testPresetName); saveState(); }
+                    }
+                }
+                if (canLevelUp) { state.level = (state.level || 1) + 1; saveState(); showLevelUp(); return; }
+                showScreen("results-screen");
+                document.getElementById("res-topic-lbl").textContent = "📊 Natijalar — " + testTopicName;
+                const pctEl = document.getElementById("res-pct");
+                pctEl.textContent = pct + "%";
+                pctEl.style.color = pct >= 70 ? "var(--green)" : pct >= 40 ? "var(--yellow)" : "var(--red)";
+                const totalSec = testResults.reduce((s, r) => s + r.seconds, 0);
+                document.getElementById("res-stats").innerHTML = `<span style="color:var(--green)">✅ ${nOk} to'g'ri</span><span style="color:var(--red)">❌ ${total - nOk} noto'g'ri</span><span style="color:var(--subtext)">⏱ ${Math.round(totalSec)}s jami vaqt</span><span style="color:var(--accent)">⚡ ${state.exp} EXP jami</span>`;
+                const resList = document.getElementById("res-list");
+                resList.innerHTML = "";
+                const correct = testResults.filter((r) => r.correct && !r.hard);
+                const hard = testResults.filter((r) => r.hard);
+                const wrong = testResults.filter((r) => !r.correct);
+                function section(title, items, fg, bg) {
+                    if (!items.length) return;
+                    const t = document.createElement("div");
+                    t.className = "results-section-title"; t.style.color = fg; t.textContent = title;
+                    resList.appendChild(t);
+                    items.forEach((r) => {
+                        const row = document.createElement("div");
+                        row.className = "results-row"; row.style.background = bg;
+                        row.innerHTML = `<span class="results-row-left" style="color:var(--text)">${r.uz || r.eng}</span><span class="results-row-right">${r.eng}  ⏱${r.seconds}s</span>`;
+                        resList.appendChild(row);
+                    });
+                }
+                section("✅ To'g'ri topganlar", correct, "var(--green)", "var(--green-bg)");
+                section("⚠️ Qiyin (30s+)", hard, "var(--yellow)", "var(--yellow-bg)");
+                section("☠️ Topa olmaganlar", wrong, "var(--red)", "var(--red-bg)");
+            }
+
+            function showLevelUp() {
+                const lv = state.level;
+                const name = LEVEL_NAMES[Math.min(lv - 1, LEVEL_NAMES.length - 1)];
+                document.getElementById("lu-num").textContent = "Level " + lv;
+                document.getElementById("lu-badge").textContent = name;
+                showScreen("levelup-screen");
+            }
+
+            function afterLevelUp() {
+                updateStatsDisplay();
+                endTest();
+                showScreen("main-screen");
+            }
+
+            function shuffle(arr) {
+                for (let i = arr.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [arr[i], arr[j]] = [arr[j], arr[i]];
+                }
+                return arr;
+            }
+
+            document.addEventListener("keydown", (e) => {
+                if (document.activeElement && document.activeElement.tagName === "INPUT") return;
+                const ts = document.getElementById("test-screen");
+                if (ts.style.display !== "none") {
+                    if (e.code === "Space" || e.code === "Enter") { e.preventDefault(); showAnswer(); }
+                }
+            });
+
+            showScreen("main-screen");
+            updateStatsDisplay();
+            refresh();
+        </script>
+    </body>
 </html>
